@@ -13,7 +13,7 @@
         </section>
         <section class="section section-skew">
             <div class="container">
-                <card shadow class="card-profile" style="margin-top:-500px;" no-body>
+                <card shadow class="card-profile" style="margin-top:-550px;" no-body>
                     <div class="px-4">
                         <div class="row justify-content-center">
                             <div class="col-lg-3 order-lg-2">
@@ -25,22 +25,23 @@
                             </div>
                             <div class="col-lg-4 order-lg-3 text-lg-right align-self-lg-center">
                                 <div class="card-profile-actions py-4 mt-lg-0">
-                                    <base-button type="info" size="sm" class="mr-4">Connect</base-button>
-                                    <base-button type="default" size="sm" class="float-right">Message</base-button>
+                                    <a :href="'https://viewblock.io/arweave/tx/'+dataset.tx" target="_blank">
+                                    <base-button type="info" size="sm" class="mr-4">Verify on Arweave</base-button>
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-lg-4 order-lg-1">
                                 <div class="card-profile-stats d-flex justify-content-center">
                                     <div>
-                                        <span class="heading">22</span>
+                                        <span class="heading">{{dataset.min.toFixed(2)}}</span>
                                         <span class="description">Minimum</span>
                                     </div>
                                     <div>
-                                        <span class="heading">10</span>
+                                        <span class="heading">{{dataset.avg.toFixed(2)}}</span>
                                         <span class="description">Average</span>
                                     </div>
                                     <div>
-                                        <span class="heading">89</span>
+                                        <span class="heading">{{dataset.max.toFixed(2)}}</span>
                                         <span class="description">Maximum</span>
                                     </div>
                                 </div>
@@ -79,6 +80,9 @@
     data: function() {
       return {
         dataset: {
+          min: 0,
+          avg: 0,
+          max: 0,
           logo: "https://assets.coingecko.com/coins/images/11683/large/Balancer.png?1592792958",
           name: "Balancer",
           url: "https://balancer.finance",
@@ -87,16 +91,25 @@
       }
     },
     async mounted() {
-      let data = await download(this.$route.params.dataset);
+      this.dataset.tx = this.$route.params.dataset;
+      let data = await download(this.dataset.tx);
+
 
       this.dataset.chartData = {};
       this.dataset.chartData.labels = [];
       this.dataset.chartData.values = [];
+      this.dataset.min = Number.MAX_VALUE;
+      let sum = 0;
+      let count = 0;
       data.forEach(point => {
         this.dataset.chartData.labels.push(point[0]);
         this.dataset.chartData.values.push(point[1]);
+        this.dataset.min = Math.min(this.dataset.min, point[1]);
+        this.dataset.max = Math.max(this.dataset.max, point[1]);
+        sum += point[1];
+        count++;
       });
-
+      this.dataset.avg = sum/count;
       console.log(this.dataset.chartData);
     }
   };

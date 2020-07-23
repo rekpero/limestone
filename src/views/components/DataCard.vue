@@ -1,8 +1,12 @@
 <template>
     <card class="border-0" hover shadow body-classes="py-5">
-        <icon name="ni ni-check-bold" type="primary" rounded class="mb-4">
-        </icon>
-        <h6 class="text-primary text-uppercase">{{dataset.name}} token prices</h6>
+
+
+
+        <h6 class="text-primary text-uppercase">
+            <img :src="dataset.logo" class="rounded-circle small-icon">
+            {{dataset.name}} token prices
+        </h6>
         <p class="description mt-3" v-html="dataset.description"></p>
         <div>
             <badge type="primary" rounded>{{dataset.symbol}}</badge>
@@ -21,3 +25,10 @@
     props:["dataset"]
   };
 </script>
+
+<style>
+    .small-icon {
+        width:42px;
+        margin-right: 10px;
+    }
+</style>
