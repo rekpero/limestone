@@ -3,10 +3,11 @@ import Router from "vue-router";
 import AppHeader from "./layout/AppHeader";
 import AppFooter from "./layout/AppFooter";
 import Components from "./views/Components.vue";
-import Landing from "./views/Landing.vue";
+import Home from "./views/Home.vue";
+import BrowseData from "./views/BrowseData.vue";
 import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
-import Profile from "./views/Profile.vue";
+import Dataset from "./views/Dataset.vue";
 
 Vue.use(Router);
 
@@ -15,20 +16,26 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "components",
+      name: "home",
       components: {
         header: AppHeader,
-        default: Components,
-        footer: AppFooter
+        default: Home
       }
     },
     {
-      path: "/landing",
-      name: "landing",
+      path: "/components",
+      name: "components",
       components: {
         header: AppHeader,
-        default: Landing,
-        footer: AppFooter
+        default: Components
+      }
+    },
+    {
+      path: "/browse-data",
+      name: "browse-data",
+      components: {
+        header: AppHeader,
+        default: BrowseData
       }
     },
     {
@@ -50,12 +57,11 @@ export default new Router({
       }
     },
     {
-      path: "/profile",
-      name: "profile",
+      path: "/dataset/:dataset",
+      name: "dataset",
       components: {
         header: AppHeader,
-        default: Profile,
-        footer: AppFooter
+        default: Dataset
       }
     }
   ],
