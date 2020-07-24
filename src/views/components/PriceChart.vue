@@ -15,8 +15,8 @@
               {
                 data: chartData.values,
                 backgroundColor: "transparent",
-                borderColor: "rgba(1, 116, 188, 0.50)",
-                pointBackgroundColor: "rgba(171, 71, 188, 1)"
+                borderColor: "#432B97",
+                pointBackgroundColor: "#B78ADB"
               }
             ]
           },
@@ -33,6 +33,19 @@
             },
             legend: {
               display: false
+            },
+            tooltips: {
+              callbacks: {
+                label: function(tooltipItem, data) {
+                  var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                  if (label) {
+                    label += ': ';
+                  }
+                  label += Math.round(tooltipItem.yLabel * 100) / 100;
+                  return label;
+                }
+              }
             }
           }
         );
