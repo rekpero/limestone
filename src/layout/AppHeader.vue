@@ -19,10 +19,8 @@
 
             <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
                 <li >
-                    <router-link to="/profile" class="nav-item" style="color:white">Browse data</router-link>
+                    <router-link to="/browse-data" class="nav-item" style="color:white">Browse data</router-link>
                 </li>
-
-
 
             </ul>
             <ul class="navbar-nav align-items-lg-right ml-lg-auto">

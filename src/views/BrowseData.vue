@@ -52,41 +52,26 @@
 <script>
 
 import DataCard from "./components/DataCard";
-import { find, download } from './services/Arweave';
+import { find, getTags } from './services/Arweave';
 
 export default {
   name: "home",
   components: {DataCard},
   data: function() {
     return {
-      datasets: [
-        {
-        logo: "https://assets.coingecko.com/coins/images/11683/large/Balancer.png?1592792958",
-        name: "Balancer",
-        url: "https://balancer.finance",
-        symbol: "BAL",
-        source: "Coingecko",
-        description: "This data set contains the price of BAL token from the last <b>7 days</b>" +
-                     " with <b>1 hour</b> granularity. Data comes from the Coingecko aggregator.",
-        chartData: null
-      },
-        {
-          logo: "https://assets.coingecko.com/coins/images/10775/small/COMP.png?1592625425",
-          name: "Compound",
-          url: "https://compound.finance",
-          symbol: "COMP",
-          source: "Coingecko",
-          description: "This data set contains the price of COMP token from the last <b>7 days</b>" +
-          " with <b>1 hour</b> granularity. Data comes from the Coingecko aggregator.",
-          chartData: null
-        }
-        ]
+      datasets: []
     }
   },
   async mounted() {
-    let dataTxs = await find("BAL", "Coingecko");
-    this.datasets[0].tx =  dataTxs[0];
-    this.datasets[1].tx =  dataTxs[0];
+    let configTxs = await find({app: "Limestone", type: "dataset-config", version: "0.002"});
+    configTxs.forEach(async tx => {
+      let config = await getTags(tx);
+      config.tx = tx;
+      console.log(config);
+      this.datasets.push(config);
+    });
+    // this.datasets[0].tx =  dataTxs[0];
+    // this.datasets[1].tx =  dataTxs[0];
   }
 };
 </script>

@@ -57,7 +57,7 @@ export default new Router({
       }
     },
     {
-      path: "/dataset/:dataset",
+      path: "/dataset/:dataset/:token",
       name: "dataset",
       components: {
         header: AppHeader,

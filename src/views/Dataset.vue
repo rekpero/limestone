@@ -19,7 +19,7 @@
                             <div class="col-lg-3 order-lg-2">
                                 <div class="card-profile-image">
                                     <a href="#">
-                                        <img :src="dataset.logo" class="rounded-circle">
+                                        <img :src="token && token.logo" class="rounded-circle">
                                     </a>
                                 </div>
                             </div>
@@ -48,7 +48,8 @@
                             </div>
                         </div>
                         <div class="text-center mt-5">
-                            <h3>{{dataset.name}}
+                            <h3>
+                                {{token && token.name}}
                             </h3>
 
                             <price-chart :data="dataset.chartData"></price-chart>
@@ -70,7 +71,8 @@
 </template>
 <script>
   import PriceChart from './components/PriceChart'
-  import { find, download } from './services/Arweave';
+  import { find, getTags, getData } from './services/Arweave';
+  import { token } from './services/Tokens';
 
   export default {
     name: "dataset",
@@ -79,38 +81,67 @@
     },
     data: function() {
       return {
+        token: null,
         dataset: {
           min: 0,
           avg: 0,
           max: 0,
-          logo: "https://assets.coingecko.com/coins/images/11683/large/Balancer.png?1592792958",
-          name: "Balancer",
-          url: "https://balancer.finance",
           chartData: null
         }
       }
     },
+    methods: {
+      getToken: function(symbol) {
+        return token(symbol);
+      }
+    },
     async mounted() {
-      this.dataset.tx = this.$route.params.dataset;
-      let data = await download(this.dataset.tx);
+      let configId = this.$route.params.dataset;
+      this.token = token(this.$route.params.token);
+      let dataTxs = await find({app: "Limestone", type: "dataset-content", version: "0.002", id: configId});
+      console.log(dataTxs);
+
+      let max = Number.MIN_VALUE;
+      let latestDataset = null;
+      for(var i=0; i<dataTxs.length; i++) {
+        try {
+          let tags = await getTags(dataTxs[i]);
+          console.log(tags);
+          if (tags.time > max) {
+            max = tags.time;
+            latestDataset = tags;
+            latestDataset.tx = dataTxs[i];
+          }
+        } catch {
+          console.log("Error fetching tx details - probably not mined yet");
+        }
+      };
+      if (latestDataset) {
+        console.log(latestDataset.tx);
+
+        Object.assign(this.dataset, latestDataset);
+        console.log(latestDataset);
+
+        let data = await getData(this.dataset.tx);
 
 
-      this.dataset.chartData = {};
-      this.dataset.chartData.labels = [];
-      this.dataset.chartData.values = [];
-      this.dataset.min = Number.MAX_VALUE;
-      let sum = 0;
-      let count = 0;
-      data.forEach(point => {
-        this.dataset.chartData.labels.push(point[0]);
-        this.dataset.chartData.values.push(point[1]);
-        this.dataset.min = Math.min(this.dataset.min, point[1]);
-        this.dataset.max = Math.max(this.dataset.max, point[1]);
-        sum += point[1];
-        count++;
-      });
-      this.dataset.avg = sum/count;
-      console.log(this.dataset.chartData);
+        this.dataset.chartData = {};
+        this.dataset.chartData.labels = [];
+        this.dataset.chartData.values = [];
+        this.dataset.min = Number.MAX_VALUE;
+        let sum = 0;
+        let count = 0;
+        data.forEach(point => {
+          this.dataset.chartData.labels.push(point[0]);
+          this.dataset.chartData.values.push(point[1]);
+          this.dataset.min = Math.min(this.dataset.min, point[1]);
+          this.dataset.max = Math.max(this.dataset.max, point[1]);
+          sum += point[1];
+          count++;
+        });
+        this.dataset.avg = sum / count;
+        console.log(this.dataset.chartData);
+      }
     }
   };
 </script>

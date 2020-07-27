@@ -9,8 +9,9 @@ async function uploadData(config) {
   let data = await fetcher.fetch(...args);
   let tags = {
     app: "Limestone",
-    version: "0.001",
+    version: "0.002",
     type: "dataset-content",
+    token: config.token,
     id: config.id,
     time: new Date().getTime(),
   };
@@ -21,7 +22,7 @@ async function uploadData(config) {
 
 async function checkAndUpdate(config) {
   console.log("Checking dataset: " + config.id);
-  let dataTxs = await connector.find({app: "Limestone", type: "dataset-content", version: "0.001", id: config.id});
+  let dataTxs = await connector.find({app: "Limestone", type: "dataset-content", version: "0.002", id: config.id});
   if (dataTxs.length === 0) {
     console.log("No matching content for given dataset.");
     await uploadData(config);
@@ -48,7 +49,7 @@ async function checkAndUpdate(config) {
 }
 
 async function updateAll() {
-  let configTxs = await connector.find({app: "Limestone", type: "dataset-config", version: "0.001"});
+  let configTxs = await connector.find({app: "Limestone", type: "dataset-config", version: "0.002"});
   configTxs.forEach(async tx => {
     let config = await connector.getTags(tx);
     config.tx = tx;
@@ -57,5 +58,5 @@ async function updateAll() {
 
 }
 
-//updateAll();
+updateAll();
 
