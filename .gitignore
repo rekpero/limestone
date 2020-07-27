@@ -22,3 +22,5 @@ yarn-error.log*
 
 # Secrets
 /backend/provider/connector/.secret.json
+
+.vercel

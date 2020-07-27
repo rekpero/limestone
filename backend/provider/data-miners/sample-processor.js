@@ -8,7 +8,7 @@ async function uploadData() {
 }
 
 async function test() {
-  let data = await connector.findAndDownload("BAL", "Coingecko");
+  let data = await connector.find({token: "BAL", source: "Coingecko"});
   console.log(data);
 }
 
