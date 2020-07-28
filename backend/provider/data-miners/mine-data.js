@@ -55,7 +55,7 @@ async function updateAll() {
     config.tx = tx;
     checkAndUpdate(config);
   });
-
+  setTimeout(updateAll, 60000);
 }
 
 updateAll();
