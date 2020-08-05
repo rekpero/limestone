@@ -8,6 +8,7 @@ import './registerServiceWorker'
 Vue.config.productionTip = false;
 Vue.use(Argon);
 Vue.use(VueResource);
+Vue.use(require('vue-moment'));
 
 new Vue({
   router,

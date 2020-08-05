@@ -8,6 +8,7 @@ import BrowseData from "./views/BrowseData.vue";
 import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
 import Dataset from "./views/Dataset.vue";
+import BalancerRewards from "./views/BalancerRewards.vue";
 
 Vue.use(Router);
 
@@ -62,6 +63,14 @@ export default new Router({
       components: {
         header: AppHeader,
         default: Dataset
+      }
+    },
+    {
+      path: "/balancer-rewards",
+      name: "balancer-rewards",
+      components: {
+        header: AppHeader,
+        default: BalancerRewards
       }
     }
   ],

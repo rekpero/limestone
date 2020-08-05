@@ -19,30 +19,26 @@
                             <div class="col-lg-3 order-lg-2">
                                 <div class="card-profile-image">
                                     <a href="#">
-                                        <img :src="token && token.logo" class="rounded-circle">
+                                        <img src="https://assets.coingecko.com/coins/images/11683/large/Balancer.png?1592792958" class="rounded-circle">
                                     </a>
                                 </div>
                             </div>
                             <div class="col-lg-4 order-lg-3 text-lg-right align-self-lg-center">
                                 <div class="card-profile-actions py-4 mt-lg-0">
                                     <a :href="'https://viewblock.io/arweave/tx/'+dataset.tx" target="_blank">
-                                    <base-button type="info" size="sm" class="mr-4">Verify on Arweave</base-button>
+                                        <base-button type="info" size="sm" class="mr-4">Verify on Arweave</base-button>
                                     </a>
                                 </div>
                             </div>
                             <div class="col-lg-4 order-lg-1">
                                 <div class="card-profile-stats d-flex justify-content-center">
                                     <div>
-                                        <span class="heading">{{dataset.min.toFixed(2)}}</span>
-                                        <span class="description">Minimum</span>
+                                        <span class="heading">{{dataset.earned | bal}}</span>
+                                        <span class="description">Earned so far</span>
                                     </div>
                                     <div>
-                                        <span class="heading">{{dataset.avg.toFixed(2)}}</span>
-                                        <span class="description">Average</span>
-                                    </div>
-                                    <div>
-                                        <span class="heading">{{dataset.max.toFixed(2)}}</span>
-                                        <span class="description">Maximum</span>
+                                        <span class="heading">{{dataset.projected | bal }}</span>
+                                        <span class="description">Weekly projection</span>
                                     </div>
                                 </div>
                             </div>
@@ -51,7 +47,6 @@
                             <h3>
                                 {{token && token.name}}
                             </h3>
-                            <div class="updated">Last updated <b> {{dataset.lastUpdated | moment("from")}}</b> </div>
 
                             <price-chart :data="dataset.chartData"></price-chart>
 
@@ -73,6 +68,7 @@
 <script>
   import PriceChart from './components/PriceChart'
   import { find, getTags, getData } from './services/Arweave';
+  import { getBlockTime } from './services/Blocks';
   import { token } from './services/Tokens';
 
   export default {
@@ -84,11 +80,11 @@
       return {
         token: null,
         dataset: {
-          min: 0,
-          avg: 0,
-          max: 0,
+          earned: null,
+          projected: null,
           chartData: null
-        }
+        },
+        user : "0x7d5024bfb6512211acb7521a76a8d60f8980fd7c"
       }
     },
     methods: {
@@ -96,67 +92,68 @@
         return token(symbol);
       }
     },
-    async mounted() {
-      let configId = this.$route.params.dataset;
-      this.token = token(this.$route.params.token);
-      let dataTxs = await find({app: "Limestone", type: "dataset-content", version: "0.002", id: configId});
-      console.log(dataTxs);
-      console.log("Found txs: " + dataTxs.length);
-      let latestTx = dataTxs.length > 0 ? dataTxs[0] : null;
-
-
-      // let max = Number.MIN_VALUE;
-      // let latestDataset = null;
-      // for(var i=0; i<dataTxs.length; i++) {
-      //   try {
-      //     let tags = await getTags(dataTxs[i]);
-      //     console.log(dataTxs[i] + " : " + tags.time);
-      //     if (tags.time > max) {
-      //       max = tags.time;
-      //       latestDataset = tags;
-      //       latestDataset.tx = dataTxs[i];
-      //     }
-      //   } catch {
-      //     console.log("Error fetching tx details - probably not mined yet");
-      //   }
-      // };
-      //I'm assuming (after running several tests) that the first tx returned is the latest
-
-
-      if (latestTx) {
-        let latestDataset = null;
-        try {
-          latestDataset = await getTags(latestTx);
-        } catch {
-          console.log("Cannot fetch the latest dataset");
-          latestTx = dataTxs[1];
-          latestDataset = await getTags(latestTx);
+    filters: {
+      bal: function (value) {
+        if (value) {
+          let usd = value * window.balPrice;
+          return value.toFixed(2) + ' BAL' + ' ($' + usd.toFixed(2) + ')';
+        } else {
+          return "..."
         }
+      }
+    },
+    async mounted() {
+      let balPriceRes = await this.$http.get("https://api.coingecko.com/api/v3/simple/price?ids=balancer&vs_currencies=USD");
+      window.balPrice = parseFloat(balPriceRes.body.balancer.usd);
+      console.log("BAL price: " + this.balPrice);
 
-        latestDataset.tx = latestTx;
-        console.log(latestDataset.time);
-        latestDataset.lastUpdated = new Date(parseInt(latestDataset.time));
+      const WEEK_SNAPSHOT_COUNT = 177;
+
+      // let configId = this.$route.params.dataset;
+      // this.token = token(this.$route.params.token);
+      let dataTxs = await find({app: "Limestone", type: "balancer-rewards", version: "0.003"});
+      console.log(dataTxs);
+
+
+      let max = Number.MIN_VALUE;
+      let latestDataset = null;
+      for(var i=0; i<dataTxs.length; i++) {
+        try {
+          let tags = await getTags(dataTxs[i]);
+          console.log(tags);
+          if (tags.time > max) {
+            max = tags.time;
+            latestDataset = tags;
+            latestDataset.tx = dataTxs[i];
+          }
+        } catch {
+          console.log("Error fetching tx details - probably not mined yet");
+        }
+      };
+
+      if (latestDataset) {
+        console.log("Latest: " + latestDataset.tx);
+
         Object.assign(this.dataset, latestDataset);
-        console.log(latestDataset);
 
-        let data = await getData(this.dataset.tx);
+        let allData = await getData(this.dataset.tx);
+        let userRewards = allData.rewards[this.user];
+        console.log(userRewards);
 
-
+        let total = 0;
         this.dataset.chartData = {};
         this.dataset.chartData.labels = [];
         this.dataset.chartData.values = [];
-        this.dataset.min = Number.MAX_VALUE;
-        let sum = 0;
-        let count = 0;
-        data.forEach(point => {
-          this.dataset.chartData.labels.push(point[0]);
-          this.dataset.chartData.values.push(point[1]);
-          this.dataset.min = Math.min(this.dataset.min, point[1]);
-          this.dataset.max = Math.max(this.dataset.max, point[1]);
-          sum += point[1];
-          count++;
+        Object.keys(userRewards).forEach(async key => {
+          let time = allData.blocks[key];
+          this.dataset.chartData.labels.push(time);
+          this.dataset.chartData.values.push(userRewards[key]);
+          total = parseFloat(userRewards[key]);
         });
-        this.dataset.avg = sum / count;
+        this.dataset.earned = total;
+        let weeklyRatio = (Object.keys(userRewards).length) / WEEK_SNAPSHOT_COUNT;
+        this.dataset.projected = total/weeklyRatio;
+
         console.log(this.dataset.chartData);
       }
     }
@@ -164,10 +161,4 @@
 </script>
 
 <style>
-    div.updated {
-        font-size: .875rem;
-        color: #adb5bd;
-        width: 100%;
-        text-align: right;
-    }
 </style>

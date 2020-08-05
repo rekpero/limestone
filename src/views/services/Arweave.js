@@ -22,6 +22,7 @@ export async function find(parameters) {
 
 export async function getData(tx) {
   let rawData = await arweave.transactions.getData(tx, {decode: true, string: true});
+  //console.log(rawData);
   let data = JSON.parse(rawData);
   return data;
 }
@@ -40,8 +41,8 @@ export async function getTags(tx) {
 }
 
 
-export async function findAndDownload(token, source) {
-  let txs = await find(token, source);
+export async function findAndDownload(parameters) {
+  let txs = await find(parameters);
   console.log("TX found: " + txs[0]);
   let data = await getData(txs[0]);
 

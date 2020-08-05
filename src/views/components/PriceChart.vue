@@ -27,7 +27,7 @@
               xAxes: [{
                 type: 'time',
                 time: {
-                  unit: 'month'
+                  unit: 'day'
                 }
               }]
             },

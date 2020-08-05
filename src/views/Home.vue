@@ -24,11 +24,20 @@
                             <base-button tag="a"
                                          href="/#/browse-data"
                                          class="mb-3 mb-sm-0"
-                                         type="info"
-                                         icon="fa fa-code">
-                                Browse data
+                                         type="info" icon="fa fa-code">
+                                Token prices
                             </base-button>
+
+                            <base-button tag="a"
+                                         href="/#/balancer-rewards"
+                                         class="mb-3 mb-sm-0"
+                                         type="warning"
+                                         icon="fa fa-smile">
+                                Balancer rewards
+                            </base-button>
+
                         </div>
+
                     </div>
                 </div>
                 <div class="row align-items-center justify-content-around stars-and-coded">
