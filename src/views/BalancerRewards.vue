@@ -36,26 +36,50 @@
                                         <span class="heading">{{dataset.earned | bal}}</span>
                                         <span class="description">Earned so far</span>
                                     </div>
-                                    <div>
+                                    <div style="padding-left:0; padding-right:0">
                                         <span class="heading">{{dataset.projected | bal }}</span>
-                                        <span class="description">Weekly projection</span>
+                                        <span class="description" >Weekly projection</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="text-center mt-5">
                             <h3>
-                                {{token && token.name}}
+                                Balancer mining rewards (Week 10)
                             </h3>
 
-                            <price-chart :data="dataset.chartData"></price-chart>
+                            <div v-show="user">
+                                <div v-show="loading" class="loading-box">
+                                    <pacman-loader color="#412996" class="pacman"></pacman-loader>
+                                    <div class="pacman-text">
+                                        Fetching data...
+                                    </div>
+
+                                </div>
+
+                                <div v-show="!loading">
+                                    <div class="updated">Last updated <b> {{dataset.lastUpdated | moment("from")}}</b> </div>
+                                    <price-chart :data="dataset.chartData" ></price-chart>
+                                </div>
+
+                            </div>
+
+                            <div class="btn-wrapper" style="margin-top:30px;" v-show="!user">
+                                <base-button @click="connectToMetamask()"
+                                             class="mb-3 mb-sm-0"
+                                             type="warning"
+                                             icon="fa fa-smile">
+                                    Connect with Metamask
+                                </base-button>
+
+                            </div>
+
 
                         </div>
                         <div class="mt-5 py-5 border-top text-center">
                             <div class="row justify-content-center">
                                 <div class="col-lg-9">
-                                    <p>{{dataset.description}}</p>
-                                    <a :href="dataset.url" target="_blank">Visit project website</a>
+                                    <a href="https://github.com/balancer-labs/bal-mining-scripts" target="_blank">Learn more about mining rewards</a>
                                 </div>
                             </div>
                         </div>
@@ -70,11 +94,16 @@
   import { find, getTags, getData } from './services/Arweave';
   import { getBlockTime } from './services/Blocks';
   import { token } from './services/Tokens';
+  import { PacmanLoader } from '@saeris/vue-spinners'
+
+  const WEEK_SNAPSHOT_COUNT = 177;
+  const Web3 = require("web3");
 
   export default {
     name: "dataset",
     components: {
-      PriceChart
+      PriceChart,
+      PacmanLoader
     },
     data: function() {
       return {
@@ -84,12 +113,44 @@
           projected: null,
           chartData: null
         },
-        user : "0x7d5024bfb6512211acb7521a76a8d60f8980fd7c"
+        user : null,
+        loading: true,
       }
     },
     methods: {
+      connectToMetamask: async function() {
+        if (window.ethereum) {
+          window.web3 = new Web3(window.ethereum);
+          await window.ethereum.enable();
+          let accounts = await web3.eth.getAccounts();
+          console.log(accounts);
+          this.user = accounts[0].toLowerCase();
+          this.parseUserData();
+        }
+      },
       getToken: function(symbol) {
         return token(symbol);
+      },
+      parseUserData: async function() {
+        console.log("Getting data for: " + this.user);
+        let userRewards = this.data.rewards[this.user];
+        console.log(userRewards);
+
+        let total = 0;
+        this.dataset.chartData = {};
+        this.dataset.chartData.labels = [];
+        this.dataset.chartData.values = [];
+        Object.keys(userRewards).forEach(async key => {
+          let time = this.data.blocks[key];
+          this.dataset.chartData.labels.push(time);
+          this.dataset.chartData.values.push(userRewards[key]);
+          total = parseFloat(userRewards[key]);
+        });
+        this.dataset.earned = total;
+        let weeklyRatio = (Object.keys(userRewards).length) / WEEK_SNAPSHOT_COUNT;
+        this.dataset.projected = total/weeklyRatio;
+
+        console.log(this.dataset.chartData);
       }
     },
     filters: {
@@ -107,58 +168,51 @@
       window.balPrice = parseFloat(balPriceRes.body.balancer.usd);
       console.log("BAL price: " + this.balPrice);
 
-      const WEEK_SNAPSHOT_COUNT = 177;
-
-      // let configId = this.$route.params.dataset;
-      // this.token = token(this.$route.params.token);
-      let dataTxs = await find({app: "Limestone", type: "balancer-rewards", version: "0.003"});
+      let dataTxs = await find({app: "Limestone", type: "balancer-rewards", version: "0.004"});
       console.log(dataTxs);
 
 
-      let max = Number.MIN_VALUE;
-      let latestDataset = null;
-      for(var i=0; i<dataTxs.length; i++) {
+      console.log("Found txs: " + dataTxs.length);
+      let latestTx = dataTxs.length > 0 ? dataTxs[0] : null;
+
+      if (latestTx) {
+        let latestDataset = null;
         try {
-          let tags = await getTags(dataTxs[i]);
-          console.log(tags);
-          if (tags.time > max) {
-            max = tags.time;
-            latestDataset = tags;
-            latestDataset.tx = dataTxs[i];
-          }
+          latestDataset = await getTags(latestTx);
         } catch {
-          console.log("Error fetching tx details - probably not mined yet");
+          console.log("Cannot fetch the latest dataset");
+          latestTx = dataTxs[1];
+          latestDataset = await getTags(latestTx);
         }
-      };
 
-      if (latestDataset) {
-        console.log("Latest: " + latestDataset.tx);
-
+        latestDataset.tx = latestTx;
+        console.log(latestDataset.time);
+        latestDataset.lastUpdated = new Date(parseInt(latestDataset.time));
         Object.assign(this.dataset, latestDataset);
+        console.log(latestDataset);
+        this.data = await getData(this.dataset.tx);
+        console.log(this.data);
+        console.log("Data fetched: " + this.dataset.snapshot);
+        this.loading = false;
 
-        let allData = await getData(this.dataset.tx);
-        let userRewards = allData.rewards[this.user];
-        console.log(userRewards);
-
-        let total = 0;
-        this.dataset.chartData = {};
-        this.dataset.chartData.labels = [];
-        this.dataset.chartData.values = [];
-        Object.keys(userRewards).forEach(async key => {
-          let time = allData.blocks[key];
-          this.dataset.chartData.labels.push(time);
-          this.dataset.chartData.values.push(userRewards[key]);
-          total = parseFloat(userRewards[key]);
-        });
-        this.dataset.earned = total;
-        let weeklyRatio = (Object.keys(userRewards).length) / WEEK_SNAPSHOT_COUNT;
-        this.dataset.projected = total/weeklyRatio;
-
-        console.log(this.dataset.chartData);
+        if (this.user) {
+          this.parseUserData();
+        }
       }
     }
   };
 </script>
 
 <style>
+    .loading-box {
+        text-align: center;
+        padding-right:3%;
+        margin-top:100px;
+    }
+    .pacman {
+        margin: auto;
+    }
+    .pacman-text {
+        margin: 30px 0 0 30px;
+    }
 </style>
