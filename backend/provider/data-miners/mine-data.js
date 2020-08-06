@@ -6,17 +6,25 @@ const MINING_INTERVAL = 600; //In seconds
 async function uploadData(config) {
   let fetchingConfig = await connector.getData(config.tx);
   let args = JSON.parse(fetchingConfig);
-  let data = await fetcher.fetch(...args);
-  let tags = {
-    app: "Limestone",
-    version: "0.002",
-    type: "dataset-content",
-    token: config.token,
-    id: config.id,
-    time: new Date().getTime(),
-  };
-  let tx = await connector.upload(data, tags);
-  console.log(tx);
+  let data = null
+  try {
+     data = await fetcher.fetch(...args);
+  } catch(e) {
+    console.log("Error fetching data.");
+    return;
+  }
+  if (data) {
+    let tags = {
+      app: "Limestone",
+      version: "0.002",
+      type: "dataset-content",
+      token: config.token,
+      id: config.id,
+      time: new Date().getTime(),
+    };
+    let tx = await connector.upload(data, tags);
+    console.log(tx);
+  }
 }
 
 
