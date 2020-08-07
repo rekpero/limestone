@@ -37,13 +37,14 @@ async function checkAndUpdate() {
     console.log("Lastest snapshot already pushed to Arweave");
   } else {
     console.log("Uploading...");
-    let data = JSON.parse(fs.readFileSync(filename));
+    let data = JSON.parse(fs.readFileSync(newestFile));
     await uploadData(data, WEEK, snapshot);
   }
 }
 
 async function updateAll() {
-  checkAndUpdate();
+  await checkAndUpdate();
+  setTimeout(updateAll, 180000);
 }
 
 updateAll();

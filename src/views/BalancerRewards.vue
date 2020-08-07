@@ -140,15 +140,24 @@
         this.dataset.chartData = {};
         this.dataset.chartData.labels = [];
         this.dataset.chartData.values = [];
-        Object.keys(userRewards).forEach(async key => {
-          let time = this.data.blocks[key];
+        let blocks = Object.keys(this.data.blocks);
+        for(var b=0; b<blocks.length; b++) {
+          let time = this.data.blocks[blocks[b]];
           this.dataset.chartData.labels.push(time);
-          this.dataset.chartData.values.push(userRewards[key]);
-          total = parseFloat(userRewards[key]);
-        });
+          this.dataset.chartData.values.push(userRewards[b]);
+          total = parseFloat(userRewards[b]);
+        };
+        //Get last 5
+        //let last = Object.keys(userRewards).sort().slice(-11);
+        var last = blocks.length-1;
+        console.log("Last: " + last);
+        let diff10 = userRewards[last] - userRewards[last-10];
+
+
         this.dataset.earned = total;
-        let weeklyRatio = (Object.keys(userRewards).length) / WEEK_SNAPSHOT_COUNT;
-        this.dataset.projected = total/weeklyRatio;
+        //let weeklyRatio = (Object.keys(userRewards).length) / WEEK_SNAPSHOT_COUNT;
+        //this.dataset.projected = total/weeklyRatio;
+        this.dataset.projected = diff10*177/10;
 
         console.log(this.dataset.chartData);
       }

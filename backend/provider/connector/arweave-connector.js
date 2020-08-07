@@ -63,12 +63,25 @@ async function findAndDownload(token, source) {
   return data;
 }
 
+async function getStatus(tx) {
+  let status = await arweave.transactions.getStatus(tx);
+  console.log(status);
+  return status
+}
+
 //EXPORTS:
 module.exports.upload = upload;
 module.exports.findAndDownload = findAndDownload;
 module.exports.find = find;
 module.exports.getData = getData;
 module.exports.getTags = getTags;
+module.exports.getStatus = getStatus;
+
+
+//mxKHaVotDSf4WBmlk4n6zu8a--VqCfrqmHPJle_PwbQ
+//qc1G8Oy_UgblVe9h5sSZkeMG37WwcFZKq6qTZ0DpCAM
+
+getStatus("qc1G8Oy_UgblVe9h5sSZkeMG37WwcFZKq6qTZ0DpCAM");
 
 
 
