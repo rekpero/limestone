@@ -177,6 +177,21 @@
       }
     },
     async mounted() {
+      //Try to get accounts
+      if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum);
+        try {
+          let accounts = await web3.eth.getAccounts();
+          if (accounts && accounts.length > 0) {
+            this.user = accounts[0];
+            console.log("Main account: " + this.user);
+          }
+        } catch(err) {
+          console.log("No accounts - agree to conect");
+        }
+      }
+
+
       let balPriceRes = await this.$http.get("https://api.coingecko.com/api/v3/simple/price?ids=balancer&vs_currencies=USD");
       window.balPrice = parseFloat(balPriceRes.body.balancer.usd);
       console.log("BAL price: " + this.balPrice);
