@@ -19,7 +19,7 @@ async function upload(data, tags) {
   await arweave.transactions.sign(tx, PRIVATE_KEY);
   const response = await arweave.transactions.post(tx);
   console.log("Uploaded: ");
-  console.log(tx);
+  console.log(response);
   return tx;
 }
 
@@ -76,12 +76,6 @@ module.exports.find = find;
 module.exports.getData = getData;
 module.exports.getTags = getTags;
 module.exports.getStatus = getStatus;
-
-
-//mxKHaVotDSf4WBmlk4n6zu8a--VqCfrqmHPJle_PwbQ
-//qc1G8Oy_UgblVe9h5sSZkeMG37WwcFZKq6qTZ0DpCAM
-
-getStatus("qc1G8Oy_UgblVe9h5sSZkeMG37WwcFZKq6qTZ0DpCAM");
 
 
 

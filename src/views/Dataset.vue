@@ -99,7 +99,7 @@
     async mounted() {
       let configId = this.$route.params.dataset;
       this.token = token(this.$route.params.token);
-      let dataTxs = await find({app: "Limestone", type: "dataset-content", version: "0.002", id: configId});
+      let dataTxs = await find({app: "Limestone", type: "dataset-content", version: "0.003", id: configId});
       console.log(dataTxs);
       console.log("Found txs: " + dataTxs.length);
       let latestTx = dataTxs.length > 0 ? dataTxs[0] : null;

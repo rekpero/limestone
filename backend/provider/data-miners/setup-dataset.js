@@ -6,7 +6,7 @@ async function setupDataset(token, source, fetching) {
 
   let dataset = {
     app: "Limestone",
-    version: "0.002",
+    version: "0.003",
     type: "dataset-config",
     provider: "Demo Provider",
     startTime: new Date().getTime(),
@@ -20,5 +20,6 @@ async function setupDataset(token, source, fetching) {
   console.log(tx);
 }
 
-//setupDataset("COMP", "Coingecko", ["compound-governance-token", 7]);
-setupDataset("BAL", "Coingecko", ["balancer", 7]);
+setupDataset("COMP", "Coingecko", ["compound-governance-token", 7]);
+//setupDataset("BAL", "coingecko", ["balancer", 7]);
+//setupDataset("CHI", "uniswap", ["chi", 7]);

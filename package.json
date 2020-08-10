@@ -17,6 +17,7 @@
     "crypto-js": "^4.0.0",
     "etherscan-api": "^10.0.5",
     "flatpickr": "^4.5.1",
+    "isomorphic-fetch": "^2.2.1",
     "moment": "^2.27.0",
     "nouislider": "^11.1.0",
     "register-service-worker": "^1.5.2",

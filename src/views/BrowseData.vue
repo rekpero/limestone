@@ -63,12 +63,17 @@ export default {
     }
   },
   async mounted() {
-    let configTxs = await find({app: "Limestone", type: "dataset-config", version: "0.002"});
+    let configTxs = await find({app: "Limestone", type: "dataset-config", version: "0.003"});
+    console.log("Found datasets: " + configTxs.length);
     configTxs.forEach(async tx => {
-      let config = await getTags(tx);
-      config.tx = tx;
-      console.log(config);
-      this.datasets.push(config);
+      try {
+        let config = await getTags(tx);
+        config.tx = tx;
+        console.log(config);
+        this.datasets.push(config);
+      } catch (err) {
+        console.log("Dataset not mined yet: " + tx);
+      }
     });
     // this.datasets[0].tx =  dataTxs[0];
     // this.datasets[1].tx =  dataTxs[0];

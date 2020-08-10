@@ -12,4 +12,9 @@ async function test() {
   console.log(data);
 }
 
-test();
+async function testFetching() {
+  let data = await fetcher.fetch("balancer", 7);
+  console.log(data);
+}
+
+testFetching();

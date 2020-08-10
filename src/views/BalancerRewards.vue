@@ -148,16 +148,20 @@
           total = parseFloat(userRewards[b]);
         };
         //Get last 5
-        //let last = Object.keys(userRewards).sort().slice(-11);
-        var last = blocks.length-1;
+        let last = Object.keys(userRewards).slice(-1);
+        let remainingCount = WEEK_SNAPSHOT_COUNT - last[0];
+        let remaining = remainingCount * (userRewards[last] - userRewards[last-1]);
         console.log("Last: " + last);
-        let diff10 = userRewards[last] - userRewards[last-10];
+        console.log("RC: " + remainingCount);
+        console.log("Remaining: " + remaining);
+
 
 
         this.dataset.earned = total;
+        this.dataset.projected = total + remaining;
         //let weeklyRatio = (Object.keys(userRewards).length) / WEEK_SNAPSHOT_COUNT;
         //this.dataset.projected = total/weeklyRatio;
-        this.dataset.projected = diff10*177/10;
+
 
         console.log(this.dataset.chartData);
       }
