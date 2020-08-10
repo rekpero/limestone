@@ -4,7 +4,7 @@ const fetchers = {
   uniswap: require("../fetcher/uniswap-fetcher.js")
 }
 
-const VERSION = "0.003";
+const VERSION = "0.004";
 
 const MINING_INTERVAL = 600; //In seconds
 
@@ -14,8 +14,9 @@ async function uploadData(config) {
   let data = null
   try {
      data = await fetchers[config.source].fetch(...args);
-  } catch(e) {
-    console.log("Error fetching data.");
+  } catch(err) {
+    console.log("Error fetching data:");
+    console.log(err);
     return;
   }
   if (data) {
@@ -36,28 +37,32 @@ async function uploadData(config) {
 
 async function checkAndUpdate(config) {
   console.log("Checking dataset: " + config.id);
-  let dataTxs = await connector.find({app: "Limestone", type: "dataset-content", version: VERSION, id: config.id});
-  if (dataTxs.length === 0) {
-    console.log("No matching content for given dataset.");
-    await uploadData(config);
-  } else {
-    console.log("Found transactions...");
-    let now = new Date().getTime();
-    let minInterval = Number.MAX_VALUE;
-    for(var i=0; i<dataTxs.length; i++) {
-      let time = now;
-      try {
-        let tags = await connector.getTags(dataTxs[i]);
-        time = tags.time;
-      } catch(err) {
-        console.log("Error fetching tx details - probably not mined yet");
-        console.log(err);
-      }
-      minInterval = Math.min(now - time, minInterval);
-    };
-    console.log("Interval since last upload: " + minInterval);
-    if (minInterval > MINING_INTERVAL * 1000) {
+  console.log(config);
+  if (config.token == "COMP") {
+    let dataTxs = await connector.find({app: "Limestone", type: "dataset-content", version: VERSION, id: config.id});
+    if (dataTxs.length === 0) {
+      console.log("No matching content for given dataset.");
       await uploadData(config);
+    } else {
+      console.log("Found transactions...");
+      let now = new Date().getTime();
+      let minInterval = Number.MAX_VALUE;
+      for (var i = 0; i < dataTxs.length; i++) {
+        let time = now;
+        try {
+          let tags = await connector.getTags(dataTxs[i]);
+          time = tags.time;
+        } catch (err) {
+          console.log("Error fetching tx details - probably not mined yet");
+          console.log(err);
+        }
+        minInterval = Math.min(now - time, minInterval);
+      }
+      ;
+      console.log("Interval since last upload: " + minInterval);
+      if (minInterval > MINING_INTERVAL * 1000) {
+        await uploadData(config);
+      }
     }
   }
 
