@@ -342,7 +342,8 @@ const WEEK = argv.week; // Week for mining distributions. Ex: 1
 
 const BAL_PER_WEEK = bnum(145000);
 const BLOCKS_PER_SNAPSHOT = 256;
-const SNAPSHOTS_PER_WEEK = 177;
+//const SNAPSHOTS_PER_WEEK = 177; Testing short week
+const SNAPSHOTS_PER_WEEK = 151;
 
 // const BAL_PER_SNAPSHOT = BAL_PER_WEEK.div(
 //    bnum(Math.ceil((END_BLOCK - START_BLOCK) / BLOCKS_PER_SNAPSHOT))
@@ -368,13 +369,7 @@ async function getRewardsAtBlock(i, pools, prices) {
 
     await fasterWeb3.fetchPoolData(pools, i);
     await fasterWeb3.fetchCurrentTokens(pools, i);
-    // await fasterWeb3.fetchCurrentTokens(pools, i);
-    // await fasterWeb3.fetchCurrentTokens(pools, i);
-    // await fasterWeb3.fetchCurrentTokens(pools, i);
-
     await fasterWeb3.fetchTokenData(pools, i);
-
-    process.exit();
 
     for (const pool of pools) {
         let poolData = {};

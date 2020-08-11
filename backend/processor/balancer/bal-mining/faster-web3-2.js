@@ -15,8 +15,8 @@ function reset() {
     // Replace YOUR-PROJECT-ID with a Project ID from your Infura Dashboard
     //new Web3.providers.WebsocketProvider("https://vigilant-pasteur:anthem-deacon-napkin-sandy-fling-viral@ws-nd-974-782-067.p2pify.com")
     //new Web3.providers.HttpProvider("https://infallible-newton:ahead-sludge-aged-snooze-resize-clutch@nd-641-207-013.p2pify.com")
-    //new Web3.providers.HttpProvider("https://awesome-wilson:jockey-morale-item-dwarf-candle-slain@nd-460-233-595.p2pify.com")
-    new Web3.providers.HttpProvider("https://rpc.archivenode.io/e8rwjzi2wxxjifzfvcn2e8rwjw2hm5pc")
+    new Web3.providers.HttpProvider("https://awesome-wilson:jockey-morale-item-dwarf-candle-slain@nd-460-233-595.p2pify.com")
+    //new Web3.providers.HttpProvider("https://rpc.archivenode.io/e8rwjzi2wxxjifzfvcn2e8rwjw2hm5pc")
   );
 }
 
@@ -71,10 +71,8 @@ async function fetchPoolData(pools, i) {
 async function fetchCurrentTokens(pools, i) {
   let start = new Date().getTime();
   var batch = new web3.BatchRequest();
-  let c=0;
+
   let promises = pools.map(async function(pool) {
-    if (c>10) return;
-    c++;
     let bPool = new web3.eth.Contract(poolAbi, pool.id);
     bPool.defaultBlock = i;
       return new Promise((res, rej) => {
@@ -85,9 +83,9 @@ async function fetchCurrentTokens(pools, i) {
                 console.log("Error getting current tokens");
                 console.log(err);
               } else {
-                console.log(bp._address);
-                console.log(pool.id);
-                console.log(data);
+                // console.log(bp._address);
+                // console.log(pool.id);
+                // console.log(data);
                 res(pool.currentTokens = data)
               }
             }
