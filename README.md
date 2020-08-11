@@ -1,8 +1,8 @@
-[LIVE DEMO](https://limestone.finance/) Pricing data & Balancer rewards
+[LIVE DEMO](https://limestone.finance/) - Pricing data & Balancer rewards
 
-[q2v4Msum6oeNRkSGfaM3E3RU6RCJ17T7Vm9ltMDEv4M](https://viewblock.io/arweave/tx/q2v4Msum6oeNRkSGfaM3E3RU6RCJ17T7Vm9ltMDEv4M) Profit sharing token (ticker: LIME supply: 100M
+[q2v4Msum6oeNRkSGfaM3E3RU6RCJ17T7Vm9ltMDEv4M](https://viewblock.io/arweave/tx/q2v4Msum6oeNRkSGfaM3E3RU6RCJ17T7Vm9ltMDEv4M) - Profit sharing token (ticker: LIME supply: 100M)
 
-[Deck](https://docs.google.com/presentation/d/1s3V3EoxuSCT5B_KYJxibngbY8L7fBZXzOPhm_3iUAI0/edit?usp=sharing) Short introduction to the project
+[Deck](https://docs.google.com/presentation/d/1s3V3EoxuSCT5B_KYJxibngbY8L7fBZXzOPhm_3iUAI0/edit?usp=sharing) - Short introduction to the project
 
 <h1>Limestone - financial data you can trust and afford</h1>
 
