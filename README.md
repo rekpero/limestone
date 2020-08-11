@@ -1,4 +1,8 @@
-[LIVE DEMO](https://limestone.finance/) (Work in progress...)
+[LIVE DEMO](https://limestone.finance/) (Pricing data & Balancer rewards)
+
+Profit sharing token: q2v4Msum6oeNRkSGfaM3E3RU6RCJ17T7Vm9ltMDEv4M
+
+[Deck](https://docs.google.com/presentation/d/1s3V3EoxuSCT5B_KYJxibngbY8L7fBZXzOPhm_3iUAI0/edit?usp=sharing) (Short introduction to the project)
 
 <h1>Limestone - financial data you can trust and afford</h1>
 
@@ -19,7 +23,7 @@ resulting in millions of dollars being lost and posing an existential threat to 
 
 <p>
 The hard-learned lesson about the data quality importance led to the explosive growth of data-providing services.
-The Chainlink, being the market leader, experienced a massive growth reaching a valuation of almost $3bn.
+The Chainlink, being the market leader, experienced a massive growth reaching a valuation of almost $5bn.
 This led many experts to the conclusion, that the whole decentralised finance is as valuable as the data that powers it.
 </p>
 
