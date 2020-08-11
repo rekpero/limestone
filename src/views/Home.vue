@@ -24,15 +24,18 @@
                             <base-button tag="a"
                                          href="/#/browse-data"
                                          class="mb-3 mb-sm-0"
-                                         type="info" icon="fa fa-code">
+                                         type="info" icon="fa fa-dollar">
                                 Token prices
                             </base-button>
+
+
 
                             <base-button tag="a"
                                          href="/#/balancer-rewards"
                                          class="mb-3 mb-sm-0"
-                                         type="warning"
-                                         icon="fa fa-smile">
+                                         type="warning">
+
+                                <img src="/img/bal-logo.png" style="height:24px; margin-right:10px;"/>
                                 Balancer rewards
                             </base-button>
 

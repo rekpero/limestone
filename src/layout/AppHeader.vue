@@ -19,7 +19,9 @@
 
             <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
                 <li >
-                    <router-link to="/browse-data" class="nav-item" style="color:white">Browse data</router-link>
+                    <router-link to="/browse-data" class="nav-item" style="color:white; margin:0">Browse data</router-link>
+                    |
+                    <router-link to="/balancer-rewards" class="nav-item" style="color:white">Balancer rewards</router-link>
                 </li>
 
             </ul>
