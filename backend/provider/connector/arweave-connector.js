@@ -1,6 +1,11 @@
+const Smartweave = require('smartweave');
 const Arweave = require('arweave/node');
-const PRIVATE_KEY = require('./.secret.json');
+const PRIVATE_KEY = require('./.client-secret.json');
 const ARQL =  require('arql-ops');
+const LIME_TOKEN = 'q2v4Msum6oeNRkSGfaM3E3RU6RCJ17T7Vm9ltMDEv4M';
+
+//Value to be updated after calculations
+const FEE = 1000000;
 
 const arweave = Arweave.init({
   host: 'arweave.net',// Hostname or IP address for a Arweave host
@@ -12,15 +17,39 @@ const arweave = Arweave.init({
 
 
 async function upload(data, tags) {
-  let tx = await arweave.createTransaction({data: JSON.stringify(data)}, PRIVATE_KEY);
+  let uploadTx = await arweave.createTransaction({data: JSON.stringify(data)}, PRIVATE_KEY);
   Object.keys(tags).forEach(function(key) {
-    tx.addTag(key, tags[key]);
+    uploadTx.addTag(key, tags[key]);
   });
+  await arweave.transactions.sign(uploadTx, PRIVATE_KEY);
+  const response = await arweave.transactions.post(uploadTx);
+  console.log("Uploaded: " + uploadTx.id);
+  console.log(response.data);
+
+  await payFee();
+
+  return uploadTx;
+}
+
+async function payFee() {
+  let address = await arweave.wallets.jwkToAddress(PRIVATE_KEY);
+  let balance = await arweave.wallets.getBalance(address);
+  console.log("Client " + address + " " + balance);
+
+  let tokenState = await Smartweave.readContract(arweave, LIME_TOKEN);
+
+  const holder = Smartweave.selectWeightedPstHolder(tokenState.balances);
+  console.log("Holder: " + holder);
+
+  const tx = await arweave.createTransaction({ target: holder, quantity: FEE.toString() }, PRIVATE_KEY);
   await arweave.transactions.sign(tx, PRIVATE_KEY);
-  const response = await arweave.transactions.post(tx);
-  console.log("Uploaded: ");
-  console.log(response);
-  return tx;
+  let response = await arweave.transactions.post(tx);
+
+  console.log("Payment tx: " + tx.id);
+  console.log(response.data);
+  if (response.data.error) {
+    console.log(response.data.error.validation);
+  }
 }
 
 
@@ -76,6 +105,3 @@ module.exports.find = find;
 module.exports.getData = getData;
 module.exports.getTags = getTags;
 module.exports.getStatus = getStatus;
-
-
-
