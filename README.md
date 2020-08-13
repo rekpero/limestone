@@ -6,7 +6,7 @@
 
 <h1>Limestone - data ecosystem for Decentralised Finance</h1>
 
-<h2>The Problem</b>
+<h3>The Problem</h3>
 
 <p>
 Financial data is the backbone of decentralised finance.
