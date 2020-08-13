@@ -38,7 +38,7 @@ This model is currently heavily subsidised and is not sustainable in the future
 when we are expecting more and more financial instruments to enter the market.
 </p>
 
-<h2>The Solution</b>
+<h3>The Solution</h3>
 
 <p>
 Limestone uses Arweave as a base blockchain.   
@@ -46,6 +46,37 @@ Arweave with its affordable permanent storage blockchain appears to be a perfect
 Moreover, the Smartweave contracts may help to maintain data integrity managing the reputation of data providers.
 Arweave offers also a neat monetisation model with the Profit Sharing Token rewarding providers for high-quality data.
 </p>
+
+<h3>Architecute</h3>
+
+<h4>Data miners</h4>
+Data miners are agents (system deamons) that periodically upload data to the network. The content of the uploaded dataset is specified by the data order that contains:
+
+* Asset name
+* Period
+* Probing interval
+* Data source 
+
+The orders are also stored on the Arweave chain and periodically queried by the miners. 
+
+Data miners could be started by executing the following scipt from the main directory:
+
+`
+node ./backend/provider/data-miners/mine-data.js
+`
+
+
+<h4>Data processors</h4>
+Data processors can transform one data set into another. It allows producing meaningful metrics and insights based on a combination of base pricing and traffic data.
+
+<h5>Balancer rewards</h5>
+An example of data processor is the code calculating rewards for providing liquidity to the Balancer protocol. 
+
+The sample processor could be started by executing the following scipt from the main directory:
+
+`
+node ./backend/provider/data-miners/mine-balancer-rewards.js
+`
 
 <h2 id="licensing">Licensing</h2>
 
