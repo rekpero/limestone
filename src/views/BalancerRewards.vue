@@ -95,10 +95,6 @@
                                 <base-button type="info" size="sm" class="mr-4" @click="setUser('0xf4a7d2d85f4ba11b5c73c35e27044c0c49f7f027')">MTA 5% </base-button>
                                 <base-button type="info" size="sm" class="mr-4" @click="setUser('0x25970282aac735cd4c76f30bfb0bf2bc8dad4e70')">MTA 80% </base-button>
                             </div>
-
-
-
-
                         </div>
                     </div>
                 </card>
@@ -202,7 +198,7 @@
       bal: function (value) {
         if (value) {
           let usd = value * window.balPrice;
-          return value.toFixed(2) + ' BAL' + ' ($' + parseInt(usd*100).toLocaleString() + ')';
+          return value.toFixed(2) + ' BAL' + ' ($' + parseInt(usd).toLocaleString() + ')';
         } else {
           return "..."
         }
