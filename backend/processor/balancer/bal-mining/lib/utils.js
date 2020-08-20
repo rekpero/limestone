@@ -189,11 +189,11 @@ async function fetchTokenPrices(allTokens, startTime, endTime, priceProgress) {
 
     let priceResponse = await response.json();
     prices[address] = priceResponse.prices;
-    priceProgress.increment();
+    //priceProgress.increment();
     // Sleep half a second between requests to prevent rate-limiting
     await sleep(1000);
   }
-  priceProgress.stop();
+  //priceProgress.stop();
 
   return prices;
 }
