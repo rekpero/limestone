@@ -45,7 +45,7 @@
                         </div>
                         <div class="text-center mt-5">
                             <h3>
-                                Balancer mining rewards (Week 10)
+                                Balancer mining rewards
                             </h3>
 
                             <div v-show="user">
@@ -58,11 +58,26 @@
                                 </div>
 
                                 <div v-show="!loading">
-                                    <div class="chart-mode">
-                                        <base-button @click="cumulative = true" :disabled="cumulative" type="info" size="sm" class="mr-4">Cumulative</base-button>
-                                        <base-button @click="cumulative = false" :disabled="!cumulative" type="info" size="sm" class="mr-4">Per snapshot</base-button>
+
+                                    <div style="width:100%; height: 30px;">
+                                        <div class="week-selector">
+                                            <base-button @click="changeWeek(10)" :disabled="week == 10" type="info" size="sm" class="mr-4">Week 10</base-button>
+                                            <base-button @click="changeWeek(11)" :disabled="week == 11" type="info" size="sm" class="mr-4">Week 11</base-button>
+                                        </div>
+
+                                        <!--<div class="updated">-->
+                                            <!--Last updated <b> {{dataset.lastUpdated | moment("from")}}</b>-->
+                                        <!--</div>-->
+
+                                        <div class="mode-selector">
+                                            <base-button @click="cumulative = true" :disabled="cumulative" type="info" size="sm" class="mr-4">Cumulative</base-button>
+                                            <base-button @click="cumulative = false" :disabled="!cumulative" type="info" size="sm" class="mr-4">Per snapshot</base-button>
+                                        </div>
+
                                     </div>
-                                    <div class="updated">Last updated <b> {{dataset.lastUpdated | moment("from")}}</b> </div>
+
+
+
                                     <price-chart :data="cumulative ? dataset.chartData : dataset.chartData2" ></price-chart>
                                 </div>
 
@@ -112,6 +127,12 @@
   const WEEK_SNAPSHOT_COUNT = 177;
   const Web3 = require("web3");
 
+
+  const WEEK_TXS = {
+    "10" : "aJrbQX8skpN4RS6LwEHFh_jc28nKc6B0tPblA-8p1ro",
+    "11" : "x4W5M6URBkvy8Gv7Vu9fCI6ZuawS9hpJo_Khb-MVoTo"
+  };
+
   export default {
     name: "dataset",
     components: {
@@ -122,6 +143,8 @@
       return {
         cumulative: true,
         token: null,
+        week: 11,
+        cachedData: {},
         dataset: {
           earned: null,
           projected: null,
@@ -189,19 +212,53 @@
         this.dataset.earned = total;
         this.dataset.projected = total + remaining;
       },
+      fetchData: async function(){
+        this.loading = true;
+        //let latestTx = dataTxs.length > 0 ? dataTxs[0] : null;
+        //Temporary show end of week 10, as Balancer decide the bounds for the next week
+        let latestTx = WEEK_TXS[this.week];
+
+
+
+
+        if (latestTx) {
+          let latestDataset = null;
+          try {
+            latestDataset = await getTags(latestTx);
+          } catch {
+            console.log("Cannot fetch the latest dataset");
+            latestTx = dataTxs[1];
+            latestDataset = await getTags(latestTx);
+          }
+
+          latestDataset.tx = latestTx;
+          console.log(latestDataset.time);
+          latestDataset.lastUpdated = new Date(parseInt(latestDataset.time));
+          Object.assign(this.dataset, latestDataset);
+          console.log(latestDataset);
+
+          this.data = this.cachedData[this.week];
+          if (!this.data) {
+            console.log("No data in cache");
+            this.data = await getData(this.dataset.tx);
+            this.cachedData[this.week] = this.data;
+          }
+          console.log(this.data);
+          console.log("Data fetched: " + this.dataset.snapshot);
+          this.loading = false;
+
+          if (this.user) {
+            this.parseUserData();
+          }
+        }
+      },
       setUser: function(account) {
         this.user = account;
         this.parseUserData();
-      }
-    },
-    filters: {
-      bal: function (value) {
-        if (value) {
-          let usd = value * window.balPrice;
-          return value.toFixed(2) + ' BAL' + ' ($' + parseInt(usd).toLocaleString() + ')';
-        } else {
-          return "..."
-        }
+      },
+      changeWeek: function(week) {
+        this.week = week;
+        this.fetchData();
       }
     },
     async mounted() {
@@ -227,37 +284,18 @@
       let dataTxs = await find({app: "Limestone", type: "balancer-rewards", version: "0.004"});
       console.log("Found txs: " + dataTxs.length);
 
-
-      //let latestTx = dataTxs.length > 0 ? dataTxs[0] : null;
-      //Temporary show end of week 10, as Balancer decide the bounds for the next week
-      let latestTx = "aJrbQX8skpN4RS6LwEHFh_jc28nKc6B0tPblA-8p1ro";
-
-
-      if (latestTx) {
-        let latestDataset = null;
-        try {
-          latestDataset = await getTags(latestTx);
-        } catch {
-          console.log("Cannot fetch the latest dataset");
-          latestTx = dataTxs[1];
-          latestDataset = await getTags(latestTx);
-        }
-
-        latestDataset.tx = latestTx;
-        console.log(latestDataset.time);
-        latestDataset.lastUpdated = new Date(parseInt(latestDataset.time));
-        Object.assign(this.dataset, latestDataset);
-        console.log(latestDataset);
-        this.data = await getData(this.dataset.tx);
-        console.log(this.data);
-        console.log("Data fetched: " + this.dataset.snapshot);
-        this.loading = false;
-
-        if (this.user) {
-          this.parseUserData();
+      this.fetchData();
+    },
+    filters: {
+      bal: function (value) {
+        if (value) {
+          let usd = value * window.balPrice;
+          return value.toFixed(2) + ' BAL' + ' ($' + parseInt(usd).toLocaleString() + ')';
+        } else {
+          return "..."
         }
       }
-    }
+    },
   };
 </script>
 
@@ -273,4 +311,11 @@
     .pacman-text {
         margin: 30px 0 0 30px;
     }
+    .week-selector {
+        float: left;
+    }
+    .mode-selector {
+        float:right;
+    }
+
 </style>
