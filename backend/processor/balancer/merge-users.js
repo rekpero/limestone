@@ -1,8 +1,7 @@
-const fasterWeb3 = require('./index');
 const fs = require('fs');
 var api = require('etherscan-api').init('KEKY5TS8G2WH712WG3SY5HWDHD2HNIUPJD');
 
-const WEEK = 10;
+const WEEK = 11;
 
 var blockCache = {};
 
