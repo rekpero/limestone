@@ -450,6 +450,7 @@ async function execute(START_BLOCK, END_BLOCK, WEEK) {
         );
         let path = `/${WEEK}/${i}`;
         utils.writeData(blockRewards, path);
+        fs.unlinkSync(`./reports/${WEEK}/_prices.json`);
 
         let elapsed = new Date().getTime()/1000 - start;
         console.log("One snapshot time: " + elapsed);

@@ -19,7 +19,8 @@
                             <div class="col-lg-3 order-lg-2">
                                 <div class="card-profile-image">
                                     <a href="#">
-                                        <img src="https://assets.coingecko.com/coins/images/11683/large/Balancer.png?1592792958" class="rounded-circle">
+                                        <img src="https://assets.coingecko.com/coins/images/11683/large/Balancer.png?1592792958"
+                                             class="rounded-circle">
                                     </a>
                                 </div>
                             </div>
@@ -38,7 +39,7 @@
                                     </div>
                                     <div style="padding-left:0; padding-right:0">
                                         <span class="heading">{{dataset.projected | bal }}</span>
-                                        <span class="description" >Weekly projection</span>
+                                        <span class="description">Weekly projection</span>
                                     </div>
                                 </div>
                             </div>
@@ -61,24 +62,35 @@
 
                                     <div style="width:100%; height: 30px;">
                                         <div class="week-selector">
-                                            <base-button @click="changeWeek(10)" :disabled="week == 10" type="info" size="sm" class="mr-4">Week 10</base-button>
-                                            <base-button @click="changeWeek(11)" :disabled="week == 11" type="info" size="sm" class="mr-4">Week 11</base-button>
+                                            <base-button @click="changeWeek(10)" :disabled="week == 10" type="info"
+                                                         size="sm" class="mr-4">Week 10
+                                            </base-button>
+                                            <base-button @click="changeWeek(11)" :disabled="week == 11" type="info"
+                                                         size="sm" class="mr-4">Week 11
+                                            </base-button>
+                                            <base-button @click="changeWeek(12)" :disabled="week == 12" type="info"
+                                                         size="sm" class="mr-4">Week 12 (In progress)
+                                            </base-button>
                                         </div>
 
                                         <!--<div class="updated">-->
-                                            <!--Last updated <b> {{dataset.lastUpdated | moment("from")}}</b>-->
+                                        <!--Last updated <b> {{dataset.lastUpdated | moment("from")}}</b>-->
                                         <!--</div>-->
 
                                         <div class="mode-selector">
-                                            <base-button @click="cumulative = true" :disabled="cumulative" type="info" size="sm" class="mr-4">Cumulative</base-button>
-                                            <base-button @click="cumulative = false" :disabled="!cumulative" type="info" size="sm" class="mr-4">Per snapshot</base-button>
+                                            <base-button @click="cumulative = true" :disabled="cumulative" type="info"
+                                                         size="sm" class="mr-4">Cumulative
+                                            </base-button>
+                                            <base-button @click="cumulative = false" :disabled="!cumulative" type="info"
+                                                         size="sm" class="mr-4">Per snapshot
+                                            </base-button>
                                         </div>
 
                                     </div>
 
 
-
-                                    <price-chart :data="cumulative ? dataset.chartData : dataset.chartData2" ></price-chart>
+                                    <price-chart
+                                            :data="cumulative ? dataset.chartData : dataset.chartData2"></price-chart>
                                 </div>
 
                             </div>
@@ -95,20 +107,29 @@
 
                             <div class="row justify-content-center py-1">
                                 <div class="col-lg-9">
-                                    <a href="https://github.com/balancer-labs/bal-mining-scripts" target="_blank">Learn more about mining rewards</a>
+                                    <a href="https://github.com/balancer-labs/bal-mining-scripts" target="_blank">Learn
+                                        more about mining rewards</a>
                                 </div>
                             </div>
                         </div>
                         <div class="mt-2 border-top">
                             <h5 style="margin-top: 1rem">
-                            Popular yield farming accounts:
+                                Popular yield farming accounts:
                             </h5>
 
                             <div class="card-profile-actions mt-lg-0" style="margin: 1rem 0 1rem 0;">
-                                <base-button type="info" size="sm" class="mr-4" @click="setUser('0xf7575d4d4db78f6ba43c734616c51e9fd4baa7fb')">mUSD / ETH</base-button>
-                                <base-button type="info" size="sm" class="mr-4" @click="setUser('0x881c72d1e6317f10a1cdcbe05040e7564e790c80')">mUSD / USDC</base-button>
-                                <base-button type="info" size="sm" class="mr-4" @click="setUser('0xf4a7d2d85f4ba11b5c73c35e27044c0c49f7f027')">MTA 5% </base-button>
-                                <base-button type="info" size="sm" class="mr-4" @click="setUser('0x25970282aac735cd4c76f30bfb0bf2bc8dad4e70')">MTA 80% </base-button>
+                                <base-button type="info" size="sm" class="mr-4"
+                                             @click="setUser('0xf7575d4d4db78f6ba43c734616c51e9fd4baa7fb')">mUSD / ETH
+                                </base-button>
+                                <base-button type="info" size="sm" class="mr-4"
+                                             @click="setUser('0x881c72d1e6317f10a1cdcbe05040e7564e790c80')">mUSD / USDC
+                                </base-button>
+                                <base-button type="info" size="sm" class="mr-4"
+                                             @click="setUser('0xf4a7d2d85f4ba11b5c73c35e27044c0c49f7f027')">MTA 5%
+                                </base-button>
+                                <base-button type="info" size="sm" class="mr-4"
+                                             @click="setUser('0x25970282aac735cd4c76f30bfb0bf2bc8dad4e70')">MTA 80%
+                                </base-button>
                             </div>
                         </div>
                     </div>
@@ -119,18 +140,19 @@
 </template>
 <script>
   import PriceChart from './components/PriceChart'
-  import { find, getTags, getData } from './services/Arweave';
-  import { getBlockTime } from './services/Blocks';
-  import { token } from './services/Tokens';
-  import { PacmanLoader } from '@saeris/vue-spinners'
+  import {find, getTags, getData} from './services/Arweave';
+  import {getBlockTime} from './services/Blocks';
+  import {token} from './services/Tokens';
+  import {PacmanLoader} from '@saeris/vue-spinners'
 
   const WEEK_SNAPSHOT_COUNT = 177;
   const Web3 = require("web3");
 
 
   const WEEK_TXS = {
-    "10" : "aJrbQX8skpN4RS6LwEHFh_jc28nKc6B0tPblA-8p1ro",
-    "11" : "x4W5M6URBkvy8Gv7Vu9fCI6ZuawS9hpJo_Khb-MVoTo"
+    "10": "aJrbQX8skpN4RS6LwEHFh_jc28nKc6B0tPblA-8p1ro",
+    "11": "x4W5M6URBkvy8Gv7Vu9fCI6ZuawS9hpJo_Khb-MVoTo",
+    "12": null
   };
 
   export default {
@@ -139,37 +161,46 @@
       PriceChart,
       PacmanLoader
     },
-    data: function() {
+    data: function () {
       return {
         cumulative: true,
         token: null,
-        week: 11,
+        week: 12,
         cachedData: {},
+        latestTx: null,
+        prevTx: null,
         dataset: {
           earned: null,
           projected: null,
           chartData: null,
           chartDataDiff: null,
         },
-        user : null,
+        user: null,
         loading: true,
       }
     },
     methods: {
-      connectToMetamask: async function() {
+      connectToMetamask: async function () {
+        console.log("Connecting to metamask");
         if (window.ethereum) {
-          window.web3 = new Web3(window.ethereum);
           await window.ethereum.enable();
-          let accounts = await web3.eth.getAccounts();
-          console.log(accounts);
-          this.user = accounts[0].toLowerCase();
-          this.parseUserData();
+          window.web3 = new Web3(window.ethereum);
+          try {
+            let accounts = await web3.eth.getAccounts();
+            if (accounts && accounts.length > 0) {
+              this.user = accounts[0].toLowerCase();
+              console.log("Main account: " + this.user);
+              this.parseUserData();
+            }
+          } catch (err) {
+            console.log("No accounts - agree to connect");
+          }
         }
       },
-      getToken: function(symbol) {
+      getToken: function (symbol) {
         return token(symbol);
       },
-      parseUserData: async function() {
+      parseUserData: async function () {
         console.log("Getting data for: " + this.user);
         let userRewards = this.data.rewards[this.user];
         console.log(userRewards);
@@ -181,110 +212,99 @@
         this.dataset.chartData.labels = [];
         this.dataset.chartData.values = [];
         let blocks = Object.keys(this.data.blocks);
-        for(var b=0; b<blocks.length; b++) {
+        for (var b = 0; b < blocks.length; b++) {
           let time = this.data.blocks[blocks[b]];
           this.dataset.chartData.labels.push(time);
           this.dataset.chartData.values.push(userRewards[b]);
           total = parseFloat(userRewards[b]);
-        };
+        }
+        ;
 
         //Diff chart
         this.dataset.chartData2 = {};
         this.dataset.chartData2.labels = [];
         this.dataset.chartData2.values = [];
-        for(var b=0; b<blocks.length; b++) {
+        for (var b = 0; b < blocks.length; b++) {
           let time = this.data.blocks[blocks[b]];
           this.dataset.chartData2.labels.push(time);
-          let val = b == 0 ? userRewards[b] : userRewards[b] - userRewards[b-1];
+          let val = b == 0 ? userRewards[b] : userRewards[b] - userRewards[b - 1];
           this.dataset.chartData2.values.push(val);
-        };
+        }
+        ;
 
         //Get last diff
         let last = Object.keys(userRewards).slice(-1);
         let remainingCount = WEEK_SNAPSHOT_COUNT - last[0];
-        let remaining = remainingCount * (userRewards[last] - userRewards[last-1]);
+        let remaining = remainingCount * (userRewards[last] - userRewards[last - 1]);
         // console.log("Last: " + last);
         // console.log("RC: " + remainingCount);
         // console.log("Remaining: " + remaining);
 
 
-
         this.dataset.earned = total;
         this.dataset.projected = total + remaining;
       },
-      fetchData: async function(){
+      fetchData: async function () {
         this.loading = true;
-        //let latestTx = dataTxs.length > 0 ? dataTxs[0] : null;
-        //Temporary show end of week 10, as Balancer decide the bounds for the next week
-        let latestTx = WEEK_TXS[this.week];
 
-
-
-
-        if (latestTx) {
-          let latestDataset = null;
-          try {
-            latestDataset = await getTags(latestTx);
-          } catch {
-            console.log("Cannot fetch the latest dataset");
-            latestTx = dataTxs[1];
-            latestDataset = await getTags(latestTx);
-          }
-
-          latestDataset.tx = latestTx;
-          console.log(latestDataset.time);
-          latestDataset.lastUpdated = new Date(parseInt(latestDataset.time));
-          Object.assign(this.dataset, latestDataset);
-          console.log(latestDataset);
-
-          this.data = this.cachedData[this.week];
-          if (!this.data) {
-            console.log("No data in cache");
-            this.data = await getData(this.dataset.tx);
-            this.cachedData[this.week] = this.data;
-          }
-          console.log(this.data);
-          console.log("Data fetched: " + this.dataset.snapshot);
-          this.loading = false;
-
-          if (this.user) {
-            this.parseUserData();
-          }
+        let latestDataset = null;
+        try {
+          latestDataset = await getTags(this.latestTx);
+          latestDataset.tx = this.latestTx;
+        } catch (err) {
+          console.log("Cannot fetch the latest dataset, getting the prev one:");
+          console.log(err);
+          latestDataset = await getTags(this.prevTx);
+          latestDataset.tx = this.prevTx;
         }
+
+        console.log("Latest snapshot: " + latestDataset.snapshot);
+        latestDataset.lastUpdated = new Date(parseInt(latestDataset.time));
+        Object.assign(this.dataset, latestDataset);
+        console.log(latestDataset);
+
+        this.data = this.cachedData[this.week];
+        if (!this.data) {
+          console.log("No data in cache");
+          this.data = await getData(this.dataset.tx);
+          this.cachedData[this.week] = this.data;
+        }
+        console.log(this.data);
+        console.log("Data fetched: " + this.dataset.snapshot);
+        this.loading = false;
+
+        if (this.user) {
+          this.parseUserData();
+        }
+
       },
-      setUser: function(account) {
+      setUser: function (account) {
         this.user = account;
         this.parseUserData();
       },
-      changeWeek: function(week) {
+      changeWeek: async function (week) {
         this.week = week;
+        this.latestTx = WEEK_TXS[this.week];
+        if (!this.latestTx) {
+          console.log("Looking for latest tx");
+          let dataTxs = await find({app: "Limestone", type: "balancer-rewards", version: "0.004", week: this.week.toString()});
+          console.log("Found txs: " + dataTxs.length);
+          this.latestTx = dataTxs.length > 0 ? dataTxs[0] : null;
+          this.prevTx = dataTxs[1];
+        }
+
         this.fetchData();
       }
     },
     async mounted() {
       //Try to get accounts
-      if (window.ethereum) {
-        window.web3 = new Web3(window.ethereum);
-        try {
-          let accounts = await web3.eth.getAccounts();
-          if (accounts && accounts.length > 0) {
-            this.user = accounts[0].toLowerCase();
-            console.log("Main account: " + this.user);
-          }
-        } catch(err) {
-          console.log("No accounts - agree to conect");
-        }
-      }
-
+      this.connectToMetamask();
 
       let balPriceRes = await this.$http.get("https://api.coingecko.com/api/v3/simple/price?ids=balancer&vs_currencies=USD");
       window.balPrice = parseFloat(balPriceRes.body.balancer.usd);
-      console.log("BAL price: " + this.balPrice);
+      console.log("BAL price: " + window.balPrice);
 
-      let dataTxs = await find({app: "Limestone", type: "balancer-rewards", version: "0.004"});
-      console.log("Found txs: " + dataTxs.length);
-
-      this.fetchData();
+      this.changeWeek(this.week);
     },
     filters: {
       bal: function (value) {
@@ -302,20 +322,24 @@
 <style>
     .loading-box {
         text-align: center;
-        padding-right:3%;
-        margin-top:100px;
+        padding-right: 3%;
+        margin-top: 100px;
     }
+
     .pacman {
         margin: auto;
     }
+
     .pacman-text {
         margin: 30px 0 0 30px;
     }
+
     .week-selector {
         float: left;
     }
+
     .mode-selector {
-        float:right;
+        float: right;
     }
 
 </style>

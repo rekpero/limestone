@@ -3,8 +3,8 @@ const miner = require('./bal-mining/index');
 const fs = require('fs');
 const web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/4151b2d00d774670adf72249002fae04"));
 
-const START_BLOCK = 10628918;
-const WEEK = 11;
+const START_BLOCK = 10674486;
+const WEEK = 12;
 var lastFetched = 0;
 
 function getNextBlock() {
@@ -17,7 +17,7 @@ function getNextBlock() {
     let block = parseInt(files[files.length-1].replace('.json', ''));
     return block + 256;
   } else {
-    return START_BLOCK;
+    return START_BLOCK ;
   }
 }
 
