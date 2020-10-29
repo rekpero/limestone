@@ -4,22 +4,25 @@ const fetchers = {
   uniswap: require("../fetcher/uniswap-fetcher.js")
 }
 
-const VERSION = "0.004";
+const VERSION = "0.005";
 
 const MINING_INTERVAL = 600; //In seconds
 
 async function uploadData(config) {
   let fetchingConfig = await connector.getData(config.tx);
+  console.log(fetchingConfig);
   let args = JSON.parse(fetchingConfig);
-  let data = null
+  let dataBundle = null;
+  let dataLatest = null;
   try {
-    data = await fetchers[config.source].fetch(...args);
+    dataBundle = await fetchers[config.source].fetchBundle(...args);
+    dataLatest = await fetchers[config.source].fetchLatest(...args);
   } catch (err) {
     console.log("Error fetching data:");
     console.log(err);
     return;
   }
-  if (data) {
+  if (dataBundle) {
     let tags = {
       app: "Limestone",
       version: VERSION,
@@ -29,7 +32,21 @@ async function uploadData(config) {
       time: new Date().getTime(),
       source: config.source
     };
-    let tx = await connector.upload(data, tags);
+    let tx = await connector.upload(tags, dataBundle);
+    console.log(tx);
+  }
+  if (dataLatest) {
+    let tags = {
+      app: "Limestone",
+      version: VERSION,
+      type: "data-latest",
+      token: config.token,
+      id: config.id,
+      time: new Date().getTime(),
+      source: config.source,
+      value: dataLatest
+    };
+    let tx = await connector.upload(tags, dataLatest);
     console.log(tx);
   }
 }
@@ -72,7 +89,8 @@ async function updateAll() {
     try {
       let config = await connector.getTags(tx);
       config.tx = tx;
-      await checkAndUpdate(config);
+      //await checkAndUpdate(config);
+      uploadData(config);
     } catch (err) {
       console.log("Cannot fetch tx, probably not mined yet: " + tx);
     }

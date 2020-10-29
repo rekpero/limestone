@@ -1,6 +1,6 @@
 const Smartweave = require('smartweave');
 const Arweave = require('arweave/node');
-const PRIVATE_KEY = require('./.client-secret.json');
+const PRIVATE_KEY = require('./.client-secret-2.json');
 const ARQL =  require('arql-ops');
 const LIME_TOKEN = 'q2v4Msum6oeNRkSGfaM3E3RU6RCJ17T7Vm9ltMDEv4M';
 
@@ -16,7 +16,7 @@ const arweave = Arweave.init({
 });
 
 
-async function upload(data, tags) {
+async function upload(tags, data) {
   let uploadTx = await arweave.createTransaction({data: JSON.stringify(data)}, PRIVATE_KEY);
   Object.keys(tags).forEach(function(key) {
     uploadTx.addTag(key, tags[key]);
@@ -26,7 +26,7 @@ async function upload(data, tags) {
   console.log("Uploaded: " + uploadTx.id);
   console.log(response.data);
 
-  await payFee();
+  //await payFee();
 
   return uploadTx;
 }

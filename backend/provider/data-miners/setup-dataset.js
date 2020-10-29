@@ -1,14 +1,14 @@
 const Crypto = require('crypto-js')
 const connector = require("../connector/arweave-connector.js");
 
-const VERSION = "0.004";
+const VERSION = "0.005";
 
 async function setupDataset(token, source, fetching) {
   let fetchingConf = JSON.stringify(fetching);
 
   let dataset = {
     app: "Limestone",
-    version: "0.004",
+    version: VERSION,
     type: "dataset-config",
     provider: "Demo Provider",
     startTime: new Date().getTime(),
@@ -24,4 +24,5 @@ async function setupDataset(token, source, fetching) {
 
 //setupDataset("COMP", "coingecko", ["compound-governance-token", 7]);
 //setupDataset("BAL", "coingecko", ["balancer", 7]);
-setupDataset("CHI", "uniswap", ["chi", 7]);
+//setupDataset("CHI", "uniswap", ["chi", 7]);
+setupDataset("AR", "coingecko", ["arweave", 7]);

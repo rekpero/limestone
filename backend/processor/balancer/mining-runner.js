@@ -22,7 +22,8 @@ function getNextBlock() {
 }
 
 async function run() {
-  let nextBlock = getNextBlock();
+  //let nextBlock = getNextBlock();
+  let nextBlock = 10719542;
   let currentBlock = await web3.eth.getBlockNumber();
   if (currentBlock < nextBlock) {
     console.log("Next block not mined yet.")

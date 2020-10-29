@@ -63,7 +63,7 @@ export default {
     }
   },
   async mounted() {
-    let configTxs = await find({app: "Limestone", type: "dataset-config", version: "0.004"});
+    let configTxs = await find({app: "Limestone", type: "dataset-config", version: "0.005"});
     console.log("Found datasets: " + configTxs.length);
     configTxs.forEach(async tx => {
       try {
