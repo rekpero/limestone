@@ -89,8 +89,7 @@ async function updateAll() {
     try {
       let config = await connector.getTags(tx);
       config.tx = tx;
-      //await checkAndUpdate(config);
-      uploadData(config);
+      await checkAndUpdate(config);
     } catch (err) {
       console.log("Cannot fetch tx, probably not mined yet: " + tx);
     }

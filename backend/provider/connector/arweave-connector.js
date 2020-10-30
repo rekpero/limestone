@@ -1,4 +1,4 @@
-const Smartweave = require('smartweave');
+//const Smartweave = require('smartweave');
 const Arweave = require('arweave/node');
 const PRIVATE_KEY = require('./.client-secret-2.json');
 const ARQL =  require('arql-ops');
@@ -32,24 +32,24 @@ async function upload(tags, data) {
 }
 
 async function payFee() {
-  let address = await arweave.wallets.jwkToAddress(PRIVATE_KEY);
-  let balance = await arweave.wallets.getBalance(address);
-  console.log("Client " + address + " " + balance);
-
-  let tokenState = await Smartweave.readContract(arweave, LIME_TOKEN);
-
-  const holder = Smartweave.selectWeightedPstHolder(tokenState.balances);
-  console.log("Holder: " + holder);
-
-  const tx = await arweave.createTransaction({ target: holder, quantity: FEE.toString() }, PRIVATE_KEY);
-  await arweave.transactions.sign(tx, PRIVATE_KEY);
-  let response = await arweave.transactions.post(tx);
-
-  console.log("Payment tx: " + tx.id);
-  console.log(response.data);
-  if (response.data.error) {
-    console.log(response.data.error.validation);
-  }
+  // let address = await arweave.wallets.jwkToAddress(PRIVATE_KEY);
+  // let balance = await arweave.wallets.getBalance(address);
+  // console.log("Client " + address + " " + balance);
+  //
+  // let tokenState = await Smartweave.readContract(arweave, LIME_TOKEN);
+  //
+  // const holder = Smartweave.selectWeightedPstHolder(tokenState.balances);
+  // console.log("Holder: " + holder);
+  //
+  // const tx = await arweave.createTransaction({ target: holder, quantity: FEE.toString() }, PRIVATE_KEY);
+  // await arweave.transactions.sign(tx, PRIVATE_KEY);
+  // let response = await arweave.transactions.post(tx);
+  //
+  // console.log("Payment tx: " + tx.id);
+  // console.log(response.data);
+  // if (response.data.error) {
+  //   console.log(response.data.error.validation);
+  // }
 }
 
 
