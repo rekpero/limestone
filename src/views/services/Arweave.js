@@ -31,12 +31,16 @@ export async function getData(tx) {
 export async function getTags(tx) {
   let transaction = await arweave.transactions.get(tx);
   let tags = {};
-  transaction.get('tags').forEach(tag => {
-    let key = tag.get('name', {decode: true, string: true});
-    let value = tag.get('value', {decode: true, string: true});
-    //console.log(`${key} : ${value}`);
-    tags[key] = value;
-  });
+  try {
+    transaction.get('tags').forEach(tag => {
+      let key = tag.get('name', {decode: true, string: true});
+      let value = tag.get('value', {decode: true, string: true});
+      //console.log(`${key} : ${value}`);
+      tags[key] = value;
+    });
+  } catch (error) {
+    console.log(error);
+  }
   return tags;
 }
 

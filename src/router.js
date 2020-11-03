@@ -9,6 +9,7 @@ import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
 import Dataset from "./views/Dataset.vue";
 import BalancerRewards from "./views/BalancerRewards.vue";
+import Details from "./views/Details.vue";
 
 Vue.use(Router);
 
@@ -40,29 +41,19 @@ export default new Router({
       }
     },
     {
-      path: "/login",
-      name: "login",
-      components: {
-        header: AppHeader,
-        default: Login,
-        footer: AppFooter
-      }
-    },
-    {
-      path: "/register",
-      name: "register",
-      components: {
-        header: AppHeader,
-        default: Register,
-        footer: AppFooter
-      }
-    },
-    {
       path: "/dataset/:dataset/:token",
       name: "dataset",
       components: {
         header: AppHeader,
         default: Dataset
+      }
+    },
+    {
+      path: "/details/:dataset/:token",
+      name: "details",
+      components: {
+        header: AppHeader,
+        default: Details
       }
     },
     {

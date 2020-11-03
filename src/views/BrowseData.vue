@@ -52,7 +52,7 @@
 <script>
 
 import DataCard from "./components/DataCard";
-import { find, getTags } from './services/Arweave';
+import { fetchDatasetConfigs } from './services/Limestone';
 
 export default {
   name: "home",
@@ -63,20 +63,7 @@ export default {
     }
   },
   async mounted() {
-    let configTxs = await find({app: "Limestone", type: "dataset-config", version: "0.005"});
-    console.log("Found datasets: " + configTxs.length);
-    configTxs.forEach(async tx => {
-      try {
-        let config = await getTags(tx);
-        config.tx = tx;
-        console.log(config);
-        this.datasets.push(config);
-      } catch (err) {
-        console.log("Dataset not mined yet: " + tx);
-      }
-    });
-    // this.datasets[0].tx =  dataTxs[0];
-    // this.datasets[1].tx =  dataTxs[0];
+    fetchDatasetConfigs(this.datasets);
   }
 };
 </script>

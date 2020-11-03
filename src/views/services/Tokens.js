@@ -24,6 +24,8 @@ const tokens = {
 
 
 export function token(symbol) {
-  return tokens[symbol];
+  let token = tokens[symbol];
+  token.symbol = symbol;
+  return token;
 }
 

@@ -24,11 +24,15 @@
                                 </div>
                             </div>
                             <div class="col-lg-4 order-lg-3 text-lg-right align-self-lg-center">
-                                <div class="card-profile-actions py-4 mt-lg-0">
+
                                     <a :href="'https://viewblock.io/arweave/tx/'+dataset.tx" target="_blank">
                                     <base-button type="info" size="sm" class="mr-4">Verify on Arweave</base-button>
                                     </a>
-                                </div>
+
+                                    <a @click="$router.push('/details/'+configId+'/'+token.symbol)">
+                                        <base-button type="info" size="sm" class="mr-4">Browse</base-button>
+                                    </a>
+
                             </div>
                             <div class="col-lg-4 order-lg-1">
                                 <div class="card-profile-stats d-flex justify-content-center">
@@ -72,8 +76,9 @@
 </template>
 <script>
   import PriceChart from './components/PriceChart'
-  import { find, getTags, getData } from './services/Arweave';
+  import { fetchDataset } from './services/Limestone';
   import { token } from './services/Tokens';
+  import { getPrice } from '@limestonefi/api';
 
   export default {
     name: "dataset",
@@ -83,12 +88,14 @@
     data: function() {
       return {
         token: null,
+        configId: '',
         dataset: {
           min: 0,
           avg: 0,
           max: 0,
           chartData: null
-        }
+        },
+
       }
     },
     methods: {
@@ -97,50 +104,10 @@
       }
     },
     async mounted() {
-      let configId = this.$route.params.dataset;
+      this.configId = this.$route.params.dataset;
       this.token = token(this.$route.params.token);
-      let dataTxs = await find({app: "Limestone", type: "dataset-content", version: "0.005", id: configId});
-      console.log(dataTxs);
-      console.log("Found txs: " + dataTxs.length);
-      let latestTx = dataTxs.length > 0 ? dataTxs[0] : null;
 
-
-      // let max = Number.MIN_VALUE;
-      // let latestDataset = null;
-      // for(var i=0; i<dataTxs.length; i++) {
-      //   try {
-      //     let tags = await getTags(dataTxs[i]);
-      //     console.log(dataTxs[i] + " : " + tags.time);
-      //     if (tags.time > max) {
-      //       max = tags.time;
-      //       latestDataset = tags;
-      //       latestDataset.tx = dataTxs[i];
-      //     }
-      //   } catch {
-      //     console.log("Error fetching tx details - probably not mined yet");
-      //   }
-      // };
-      //I'm assuming (after running several tests) that the first tx returned is the latest
-
-
-      if (latestTx) {
-        let latestDataset = null;
-        try {
-          latestDataset = await getTags(latestTx);
-        } catch {
-          console.log("Cannot fetch the latest dataset");
-          latestTx = dataTxs[1];
-          latestDataset = await getTags(latestTx);
-        }
-
-        latestDataset.tx = latestTx;
-        console.log(latestDataset.time);
-        latestDataset.lastUpdated = new Date(parseInt(latestDataset.time));
-        Object.assign(this.dataset, latestDataset);
-        console.log(latestDataset);
-
-        let data = await getData(this.dataset.tx);
-
+      await fetchDataset(this.dataset, this.configId, 0);
 
         this.dataset.chartData = {};
         this.dataset.chartData.labels = [];
@@ -148,7 +115,7 @@
         this.dataset.min = Number.MAX_VALUE;
         let sum = 0;
         let count = 0;
-        data.forEach(point => {
+        this.dataset.data.forEach(point => {
           this.dataset.chartData.labels.push(point[0]);
           this.dataset.chartData.values.push(point[1]);
           this.dataset.min = Math.min(this.dataset.min, point[1]);
@@ -158,7 +125,9 @@
         });
         this.dataset.avg = sum / count;
         console.log(this.dataset.chartData);
-      }
+
+
+
     }
   };
 </script>
