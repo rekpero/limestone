@@ -53,21 +53,34 @@
                         </div>
                         <div class="text-center mt-5">
                             <h3>
-                                {{token && token.name}}
+                                {{token && token.name}} <b v-if="currentPrice">{{currentPrice.price | usd}}</b>
                             </h3>
                             <div class="updated">Last updated <b> {{dataset.lastUpdated | moment("from")}}</b> </div>
 
                             <price-chart :data="dataset.chartData"></price-chart>
 
                         </div>
-                        <div class="mt-5 py-5 border-top text-center">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-9">
-                                    <p>{{dataset.description}}</p>
-                                    <a :href="dataset.url" target="_blank">Visit project website</a>
+                        <div class="mt-1 py-1 border-top">
+
+                                    <div style="padding: 10px 0 10px 0">
+                                        Fetch the AR token price with just one line of code using
+                                        <a href="https://github.com/jakub-wojciechowski/limestone-api/tree/main">Limestone API</a>:
+                                    </div>
+                                    <pre v-highlightjs class="code-block">
+                                        <code class="javascript" >
+const Limestone = require('@limestone/api');
+
+<b>let price = await Limestone.getPrice("AR");</b>
+
+//The price is returned in the following format:
+{
+    price: 2.05, //as Float
+    updated: '2020-11-03 16:00:00', //as Date
+}
+                                        </code>
+                                    </pre>
                                 </div>
-                            </div>
-                        </div>
+
                     </div>
                 </card>
             </div>
@@ -95,7 +108,7 @@
           max: 0,
           chartData: null
         },
-
+        currentPrice: null
       }
     },
     methods: {
@@ -126,8 +139,7 @@
         this.dataset.avg = sum / count;
         console.log(this.dataset.chartData);
 
-
-
+        this.currentPrice = await getPrice("AR");
     }
   };
 </script>
@@ -138,5 +150,11 @@
         color: #adb5bd;
         width: 100%;
         text-align: right;
+    }
+
+    pre.code-block {
+        background-color: #f8f8f8;
+        color: #525252;
+        padding: 0 10px 0 10px;
     }
 </style>
