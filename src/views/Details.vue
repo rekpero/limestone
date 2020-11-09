@@ -50,69 +50,6 @@
                                         <td>
                                             <base-button type="info" size="sm" class="mr-4">Raise Dispute</base-button>
                                         </td>
-                                        <!--<th scope="row">-->
-                                            <!--<div class="media align-items-center">-->
-                                                <!--<a href="#" class="avatar rounded-circle mr-3">-->
-                                                    <!--<img alt="Image placeholder" :src="row.img">-->
-                                                <!--</a>-->
-                                                <!--<div class="media-body">-->
-                                                    <!--<span class="name mb-0 text-sm">{{row.title}}</span>-->
-                                                <!--</div>-->
-                                            <!--</div>-->
-                                        <!--</th>-->
-                                        <!--<td class="budget">-->
-                                            <!--{{row.budget}}-->
-                                        <!--</td>-->
-                                        <!--<td>-->
-                                            <!--<badge class="badge-dot mr-4" :type="row.statusType">-->
-                                                <!--<i :class="`bg-${row.statusType}`"></i>-->
-                                                <!--<span class="status">{{row.status}}</span>-->
-                                            <!--</badge>-->
-                                        <!--</td>-->
-                                        <!--<td>-->
-                                            <!--<div class="avatar-group">-->
-                                                <!--<a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="Ryan Tompson">-->
-                                                    <!--<img alt="Image placeholder" src="img/theme/team-1-800x800.jpg">-->
-                                                <!--</a>-->
-                                                <!--<a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="Romina Hadid">-->
-                                                    <!--<img alt="Image placeholder" src="img/theme/team-2-800x800.jpg">-->
-                                                <!--</a>-->
-                                                <!--<a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="Alexander Smith">-->
-                                                    <!--<img alt="Image placeholder" src="img/theme/team-3-800x800.jpg">-->
-                                                <!--</a>-->
-                                                <!--<a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="Jessica Doe">-->
-                                                    <!--<img alt="Image placeholder" src="img/theme/team-4-800x800.jpg">-->
-                                                <!--</a>-->
-                                            <!--</div>-->
-                                        <!--</td>-->
-
-                                        <!--<td>-->
-                                            <!--<div class="d-flex align-items-center">-->
-                                                <!--<span class="completion mr-2">{{row.completion}}%</span>-->
-                                                <!--<div>-->
-                                                    <!--<base-progress :type="row.statusType"-->
-                                                                   <!--:show-percentage="false"-->
-                                                                   <!--class="pt-0"-->
-                                                                   <!--:value="row.completion"/>-->
-                                                <!--</div>-->
-                                            <!--</div>-->
-                                        <!--</td>-->
-
-                                        <!--<td class="text-right">-->
-                                            <!--<base-dropdown class="dropdown"-->
-                                                           <!--position="right">-->
-                                                <!--<a slot="title" class="btn btn-sm btn-icon-only text-light" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-                                                    <!--<i class="fas fa-ellipsis-v"></i>-->
-                                                <!--</a>-->
-
-                                                <!--<template>-->
-                                                    <!--<a class="dropdown-item" href="#">Action</a>-->
-                                                    <!--<a class="dropdown-item" href="#">Another action</a>-->
-                                                    <!--<a class="dropdown-item" href="#">Something else here</a>-->
-                                                <!--</template>-->
-                                            <!--</base-dropdown>-->
-                                        <!--</td>-->
-
                                     </template>
 
                                 </base-table>

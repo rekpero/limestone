@@ -1,4 +1,4 @@
-import { find, getTags, getData } from './Arweave';
+import { find, getTags, getData, findLastTx, findAllTx } from './Arweave';
 
 const VERSION = "0.005";
 
@@ -19,43 +19,29 @@ export async function fetchDatasetConfigs(result) {
 }
 
 export async function fetchDataset(result, configId, id, dataTxs) {
-  if (!dataTxs) {
-    dataTxs = await find({app: "Limestone", type: "dataset-content", version: VERSION, id: configId});
-    console.log("Found txs: " + dataTxs.length);
-  }
-
-  let latestTx = dataTxs.length > id ? dataTxs[id] : null;
-
-  if (latestTx) {
-    let latestDataset = null;
-    try {
-      latestDataset = await getTags(latestTx);
-      latestDataset.tx = latestTx;
-      latestDataset.lastUpdated = new Date(parseInt(latestDataset.time));
-      console.log(latestDataset.lastUpdated);
-
-      console.log(latestDataset);
-      Object.assign(result, latestDataset);
-      result.data = await getData(result.tx);
-    } catch {
-      console.log("Cannot fetch the latest dataset, trying previous transaction: " + (id + 1));
-      await fetchDataset(result, configId, id+1, dataTxs);
-    }
-  }
+  let lastTx = await findLastTx({app: "Limestone", type: "dataset-content", version: VERSION, id: configId});
+  console.log("Latest tx: " + lastTx);
+  result.tx = lastTx;
+  result.data = await getData(result.tx);
 }
 
 export async function fetchDataEntries(configId, result) {
-  let dataTxs = await find({app: "Limestone", type: "data-latest", version: VERSION, id: configId});
-  console.log(dataTxs);
+  let dataTxs = await findAllTx({app: "Limestone", type: "data-latest", version: VERSION, id: configId}, 10);
   console.log("Found txs: " + dataTxs.length);
 
-  dataTxs.forEach(async function(tx) {
-    let tags = await getTags(tx);
-    tags.tx = tx;
-    tags.time = new Date(parseInt(tags.time));
-    console.log(tags);
-    result.push(tags);
-    result = result.sort((a,b) => b.time - a.time);
+  dataTxs.forEach(edge => {
+    let entry = {
+      tx: edge.node.id
+    };
+    edge.node.tags.forEach(tag => {
+      if (tag.name === "time") {
+        entry.time = new Date(parseInt(tag.value));
+      }
+      if (tag.name === "value") {
+        entry.value = parseFloat(tag.value);
+      }
+    });
+    result.push(entry);
   });
 }
 
