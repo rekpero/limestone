@@ -16,11 +16,21 @@ export async function handle(state, action) {
       throw new ContractError(`No title specified`);
     }
 
+    if (!action.input.stake) {
+      throw new ContractError(`No stake specified`);
+    }
+
+    if (action.input.stake < state.MIN_STAKE) {
+      throw new ContractError(`You need to deposit a least a minimum stake: ${state.MIN_STAKE}`);
+    }
+
     state.disputes.push({
       creator: action.caller,
       title: action.input.title,
       quorum: state.BASE_QUORUM,
+      stake: action.input.stake,
       status: status.VOTING,
+      disputedTx: action.input.disputedTx,
       votes: {
         approve: 0,
         reject: 0
@@ -28,13 +38,6 @@ export async function handle(state, action) {
     });
 
     return { state };
-  }
-
-  if (action.input.function == 'getBalances') {
-
-    const tokenContractState = await SmartWeave.contracts.readContractState(state.STAKING_TOKEN);
-
-    return tokenContractState.balances;
   }
 
   // if (input.function == 'transfer') {

@@ -3,6 +3,7 @@ const WalletLoader = require('./WalletLoader');
 const Smartweave = require('smartweave');
 const chai = require('chai');
 const expect  = chai.expect;
+chai.use(require('chai-as-promised'))
 
 var user1, user2, tribunal, token;
 
@@ -35,14 +36,10 @@ describe('Miscellaneous functions', function () {
     //Deploy tribunal contract
     tribunal = new ContractWrapper("./contracts/src/Tribunal.js", {
       BASE_QUORUM: 10,
-      STAKING_TOKEN: token.contractId
+      MIN_STAKE: 10,
+      STAKING_TOKEN: token.contractId,
     });
 
-  });
-
-  it('should have no disputes at the beginning', async function () {
-    let tokenId = token.contractId;
-    console.log("Token ID: " + tokenId);
   });
 
   //TODO: Testing nested contracts
@@ -56,8 +53,14 @@ describe('Miscellaneous functions', function () {
     expect(disputes).to.be.undefined;
   });
 
+  it('should reject with no min stake', async function () {
+    await expect(tribunal.execute({function: "openDispute", title: "Dispute 1", stake: 5}, user1))
+      .to.be.rejectedWith("You need to deposit a least a minimum stake: 10");
+  })
+
+
   it('should open dispute', async function () {
-    await tribunal.execute({function: "openDispute", title: "Dispute 1"}, user1);
+    await tribunal.execute({function: "openDispute", title: "Dispute 1", stake: 11}, user1);
 
     //There should be one new dispute
     let disputes = await tribunal.state.disputes;
