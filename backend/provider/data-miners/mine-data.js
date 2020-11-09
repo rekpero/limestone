@@ -53,30 +53,20 @@ async function uploadData(config) {
 
 
 async function checkAndUpdate(config) {
-  console.log("Checking dataset: " + config.id);
+  console.log("Checking transactions from dataset: " + config.id);
   console.log(config);
-  let dataTxs = await connector.find({app: "Limestone", type: "dataset-content", version: VERSION, id: config.id});
-  if (dataTxs.length === 0) {
+  let lastTx = await connector.findLastTx({app: "Limestone", version: VERSION, id: config.id});
+  if (lastTx  == null) {
     console.log("No matching content for given dataset.");
     await uploadData(config);
   } else {
-    console.log("Found transactions...");
+    console.log("Found last Tx:");
+    console.log(lastTx);
     let now = new Date().getTime();
-    let minInterval = Number.MAX_VALUE;
-    for (var i = 0; i < dataTxs.length; i++) {
-      let time = now;
-      try {
-        let tags = await connector.getTags(dataTxs[i]);
-        time = tags.time;
-      } catch (err) {
-        console.log("Error fetching tx details - probably not mined yet");
-        console.log(err);
-      }
-      minInterval = Math.min(now - time, minInterval);
-    }
-    ;
-    console.log("Interval since last upload: " + minInterval);
-    if (minInterval > MINING_INTERVAL * 1000) {
+    let interval = now - lastTx.time;
+
+    console.log("Interval since last upload: " + interval);
+    if (interval > MINING_INTERVAL * 1000) {
       await uploadData(config);
     }
   }
@@ -92,9 +82,10 @@ async function updateAll() {
       await checkAndUpdate(config);
     } catch (err) {
       console.log("Cannot fetch tx, probably not mined yet: " + tx);
+      console.log(err);
     }
   });
-  setTimeout(updateAll, 60000);
+  setTimeout(updateAll, 600000);
 }
 
 updateAll();

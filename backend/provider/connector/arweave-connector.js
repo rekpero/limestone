@@ -1,5 +1,6 @@
 //const Smartweave = require('smartweave');
 const Arweave = require('arweave/node');
+const fetch = require('isomorphic-fetch');
 const PRIVATE_KEY = require('./.client-secret-2.json');
 const ARQL =  require('arql-ops');
 const LIME_TOKEN = 'q2v4Msum6oeNRkSGfaM3E3RU6RCJ17T7Vm9ltMDEv4M';
@@ -11,7 +12,7 @@ const arweave = Arweave.init({
   host: 'arweave.net',// Hostname or IP address for a Arweave host
   port: 443,          // Port
   protocol: 'https',  // Network protocol http or https
-  timeout: 20000,     // Network request timeouts in milliseconds
+  timeout: 60000,     // Network request timeouts in milliseconds
   logging: false,     // Enable network request logging
 });
 
@@ -63,6 +64,60 @@ async function find(parameters) {
   return results;
 }
 
+async function findLastTx(parameters) {
+  let query = `{ transactions(
+  first: 1,
+  tags: [
+      { name: "app", values: ["${parameters.app}"] },
+      { name: "version", values: ["${parameters.version}"] },
+      { name: "id", values: ["${parameters.id}"] }
+    ],
+    block: {min: 564000},
+    sort: HEIGHT_DESC
+    ) {
+      edges {
+        node {
+          id,
+          block {
+            height
+          },
+          tags {
+            name
+            value
+          }
+        }
+      }
+    }
+  }
+`;
+
+  let response = await fetch("https://arweave.dev/graphql", {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query,
+    }),
+  });
+
+  let res = await response.json();
+  if (res.data) {
+    let tags = res.data.transactions.edges[0].node.tags;
+    let result = {};
+    tags.forEach(tag => {
+      if (tag.name === "time") {
+        result.time = new Date(parseInt(tag.value))
+      }
+    });
+    return result;
+  } else {
+    throw Error("No data returned from Arweave Graph QL");
+  }
+
+}
+
 
 async function getData(tx) {
   let rawData = await arweave.transactions.getData(tx, {decode: true, string: true});
@@ -102,6 +157,7 @@ async function getStatus(tx) {
 module.exports.upload = upload;
 module.exports.findAndDownload = findAndDownload;
 module.exports.find = find;
+module.exports.findLastTx = findLastTx;
 module.exports.getData = getData;
 module.exports.getTags = getTags;
 module.exports.getStatus = getStatus;
