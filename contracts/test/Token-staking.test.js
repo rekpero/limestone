@@ -1,5 +1,5 @@
-const ContractWrapper = require('./ContractWrapper');
-const WalletLoader = require('./WalletLoader');
+const ContractWrapper = require('./common/ContractWrapper');
+const WalletLoader = require('./common/WalletLoader');
 const Smartweave = require('smartweave');
 const chai = require('chai');
 const expect  = chai.expect;

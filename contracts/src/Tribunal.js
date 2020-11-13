@@ -1,94 +1,74 @@
 
 export async function handle(state, action) {
+
+  const DAY = 60*60*24*1000;
+
   const status = {
     VOTING: "voting",
     APPROVED: "approved",
     REJECTED: "rejected"
   };
 
+  let Token = state.token;
+  let Disputes = state.disputes;
+
 
   if (action.input.function == 'openDispute') {
-    if (!state.disputes) {
+
+    //Input parameters
+    let title = action.input.title;
+    let description = action.input.description;
+    let disputedTx = action.input.disputedTx;
+    let deposit = action.input.deposit;
+
+    if (!Disputes) {
       state.disputes = [];
+      state.counter = 1;
+      Disputes = state.disputes;
     }
 
-    if (!action.input.title) {
+    if (!title) {
       throw new ContractError(`No title specified`);
     }
 
-    if (!action.input.stake) {
-      throw new ContractError(`No stake specified`);
+    if (!description) {
+      throw new ContractError(`No description provided`);
     }
 
-    if (action.input.stake < state.MIN_STAKE) {
-      throw new ContractError(`You need to deposit a least a minimum stake: ${state.MIN_STAKE}`);
-    }
+    //Check if tx hasn't been disputed before
+    Disputes.forEach(dispute => {
+      if (dispute.disputedTx === disputedTx && dispute.round === 0) {
+        throw new ContractError(`Transaction ${disputedTx} has already been disputed`);
+      }
+    });
+
+    //TODO: Verify deposit against disputedTX stake
 
     state.disputes.push({
+      id: "D-" + state.counter++,
       creator: action.caller,
-      title: action.input.title,
+      title: title,
+      description: description,
       quorum: state.BASE_QUORUM,
-      stake: action.input.stake,
+      deposit: deposit,
       status: status.VOTING,
-      disputedTx: action.input.disputedTx,
-      votes: {
-        approve: 0,
-        reject: 0
-      }
+      round: 0,
+      disputedTx: disputedTx,
     });
 
     return { state };
   }
 
-  // if (input.function == 'transfer') {
-  //
-  //   let target = input.target;
-  //   let qty = input.qty;
-  //
-  //   if (!Number.isInteger(qty)) {
-  //     throw new ContractError(`Invalid value for "qty". Must be an integer`);
-  //   }
-  //
-  //   if (!target) {
-  //     throw new ContractError(`No target specified`);
-  //   }
-  //
-  //   if (qty <= 0 || caller == target) {
-  //     throw new ContractError('Invalid token transfer');
-  //   }
-  //
-  //   if (balances[caller] < qty) {
-  //     throw new ContractError(`Caller balance not high enough to send ${qty} token(s)!`);
-  //   }
-  //
-  //   // Lower the token balance of the caller
-  //   balances[caller] -= qty;
-  //   if (target in balances) {
-  //     // Wallet already exists in state, add new tokens
-  //     balances[target] += qty;
-  //   } else {
-  //     // Wallet is new, set starting balance
-  //     balances[target] = qty;
-  //   }
-  //
-  //   return { state };
-  // }
-  //
-  // if (input.function == 'balance') {
-  //
-  //   let target = input.target;
-  //   let ticker = state.ticker;
-  //
-  //   if (typeof target !== 'string') {
-  //     throw new ContractError(`Must specificy target to get balance for`);
-  //   }
-  //
-  //   if (typeof balances[target] !== 'number') {
-  //     throw new ContractError(`Cannnot get balance, target does not exist`);
-  //   }
-  //
-  //   return { result: { target, ticker, balance: balances[target] } };
-  // }
+  if (action.input.function == 'closeDispute') {
+    //Input parameters
+    let id = action.input.disputeId;
+
+    return { state };
+  }
+
+  function getVotes() {
+    return {yes: 0, no: 10};
+  }
 
   throw new ContractError(`No function supplied or function not recognised: "${input.function}"`);
 }

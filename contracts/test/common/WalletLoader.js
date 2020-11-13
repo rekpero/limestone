@@ -1,4 +1,4 @@
-const Arweave = require('arweave/node');
+const Arweave = require('../../../../arweave-js/node/index');
 
 const arweave = Arweave.init({
   host: 'arweave.net',// Hostname or IP address for a Arweave host
@@ -8,8 +8,8 @@ const arweave = Arweave.init({
   logging: false,     // Enable network request logging
 });
 
-const ACCOUNT_1 = require('./keys/.account-1.json');
-const ACCOUNT_2 = require('./keys/.account-2.json');
+const ACCOUNT_1 = require('../keys/.account-1.json');
+const ACCOUNT_2 = require('../keys/.account-2.json');
 
 async function loadWallets() {
   return [

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const Arweave = require('arweave/node');
+const Arweave = require('../../../../arweave-js/node/index');
 const ContractLoad = require('smartweave/lib/contract-load');
 const ContractStep = require('smartweave/lib/contract-step');
 
@@ -19,7 +19,7 @@ class ContractWrapper {
     this.contractId = "TEST-" + new Date().getTime();
 
     let contractInfo = ContractLoad.createContractExecutionEnvironment(arweave, contractSrc, this.contractId);
-    console.log(contractInfo);
+    //console.log(contractInfo);
 
     this.handler = contractInfo.handler;
     this.state = initialState;
