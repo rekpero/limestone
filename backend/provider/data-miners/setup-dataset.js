@@ -12,17 +12,17 @@ async function setupDataset(token, source, fetching) {
     type: "dataset-config",
     provider: "Demo Provider",
     startTime: new Date().getTime(),
-    interval: "60",
+    interval: "600",
     token: token,
     source: source
   };
   dataset.id = Crypto.SHA256(JSON.stringify(dataset)).toString();
   console.log(dataset.id);
-  let tx = await connector.upload(fetchingConf, dataset);
+  let tx = await connector.upload(dataset, fetchingConf);
   console.log(tx);
 }
 
 //setupDataset("COMP", "coingecko", ["compound-governance-token", 7]);
 //setupDataset("BAL", "coingecko", ["balancer", 7]);
 //setupDataset("CHI", "uniswap", ["chi", 7]);
-setupDataset("AR", "coingecko", ["arweave", 7]);
+setupDataset("BTC", "coingecko", ["bitcoin", 7]);

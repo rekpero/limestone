@@ -1,4 +1,4 @@
-const Arweave = require('../../../../arweave-js/node/index');
+const Arweave = require('arweave');
 
 const arweave = Arweave.init({
   host: 'arweave.net',// Hostname or IP address for a Arweave host

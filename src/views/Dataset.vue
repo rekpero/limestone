@@ -30,7 +30,7 @@
                                     </a>
 
                                     <a @click="$router.push('/details/'+configId+'/'+token.symbol)">
-                                        <base-button type="info" size="sm" class="mr-4">Browse</base-button>
+                                        <base-button type="info" size="sm" class="mr-4">Raise dispute</base-button>
                                     </a>
 
                             </div>
@@ -70,7 +70,7 @@
                                         <code class="javascript" >
 const Limestone = require('@limestone/api');
 
-<b>let price = await Limestone.getPrice("AR");</b>
+<b>let price = await Limestone.getPrice("{{token.symbol}}");</b>
 
 //The price is returned in the following format:
 {
@@ -156,5 +156,8 @@ const Limestone = require('@limestone/api');
         background-color: #f8f8f8;
         color: #525252;
         padding: 0 10px 0 10px;
+    }
+    img.rounded-circle {
+        width: 150px;
     }
 </style>

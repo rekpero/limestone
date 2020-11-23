@@ -67,3 +67,9 @@ export default {
   }
 };
 </script>
+
+<style>
+    img.rounded-circle.small-icon {
+        width: 50px;
+    }
+</style>

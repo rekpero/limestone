@@ -10,6 +10,17 @@ const arweave = Arweave.init({
   logging: false,     // Enable network request logging
 });
 
+var recentHeight;
+
+async function getCurrentHeight() {
+  if (!recentHeight) {
+    let info = await arweave.network.getInfo();
+    recentHeight = parseInt(info.height);
+  }
+  console.log("Recent height: " + recentHeight);
+  return recentHeight;
+}
+
 export async function find(parameters) {
   let arqlParameters = Object.keys(parameters).reduce((acc, key) => {
     acc.push(ARQL.equals(key, parameters[key]));
@@ -55,6 +66,7 @@ export async function findAndDownload(parameters) {
 }
 
 export async function findLastTx(parameters) {
+  let startBlock = (await getCurrentHeight()) - 100;
   let query = `{ transactions(
   first: 1,
   tags: [
@@ -63,7 +75,7 @@ export async function findLastTx(parameters) {
       { name: "id", values: ["${parameters.id}"] }
       { name: "type", values: ["${parameters.type}"] }
     ],
-    block: {min: 564000},
+    block: {min: ${startBlock}},
     sort: HEIGHT_DESC
     ) {
       edges {
@@ -74,6 +86,7 @@ export async function findLastTx(parameters) {
     }
   }
 `;
+  console.log(query);
 
   let response = await fetch("https://arweave.dev/graphql", {
     method: 'POST',
@@ -96,16 +109,60 @@ export async function findLastTx(parameters) {
 }
 
 export async function findAllTx(parameters, limit) {
+  let startBlock = (await getCurrentHeight()) - 500;
   let query = `{ transactions(
   first: ${limit},
   tags: [
       { name: "app", values: ["${parameters.app}"] },
       { name: "version", values: ["${parameters.version}"] },
-      { name: "id", values: ["${parameters.id}"] }
+      { name: "id", values: ["${parameters.id}"] },
       { name: "type", values: ["${parameters.type}"] }
     ],
-    block: {min: 564000},
+    block: {min: ${startBlock}},
     sort: HEIGHT_DESC
+    ) {
+      edges {
+        node {
+          id,
+          tags {
+            name
+            value
+          }
+        }
+      }
+    }
+  }
+`;
+  console.log(query);
+
+  let response = await fetch("https://arweave.dev/graphql", {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query,
+    }),
+  });
+
+  let res = await response.json();
+  if (res.data) {
+    return res.data.transactions.edges;
+  } else {
+    throw Error("No data returned from Arweave Graph QL");
+  }
+
+}
+
+export async function findConfigTx(parameters, limit) {
+  let query = `{ transactions(
+  ids: [
+    "k5lxkNBdRNxUHYteDZ2ma62ULYNo5MfvtsT4KzVMbnw",
+     "EpIx1wbzpmxY4QmQrdIKoW7iwHuPqQugKMRt0vwqMvo",
+     "fjwvlK4hI0W_-I3DYSUTo1byinrL9wRqzF9nnKi3bIA"
+     ],
+  sort: HEIGHT_ASC
     ) {
       edges {
         node {

@@ -6,6 +6,8 @@ import VueResource from 'vue-resource';
 import './registerServiceWorker'
 import { VueSpinners } from '@saeris/vue-spinners'
 import VueHighlightJS from 'vue-highlightjs'
+import '@grapecity/wijmo.vue2.gauge';
+import '@grapecity/wijmo.styles/wijmo.css';
 
 Vue.config.productionTip = false;
 Vue.use(Argon);

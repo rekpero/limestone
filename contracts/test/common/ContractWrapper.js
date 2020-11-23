@@ -1,5 +1,5 @@
 const fs = require('fs');
-const Arweave = require('../../../../arweave-js/node/index');
+const Arweave = require('arweave');
 const ContractLoad = require('smartweave/lib/contract-load');
 const ContractStep = require('smartweave/lib/contract-step');
 

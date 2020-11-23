@@ -19,7 +19,7 @@ const arweave = Arweave.init({
   logging: false,     // Enable network request logging
 });
 
-describe('Miscellaneous functions', function () {
+describe('Token staking', function () {
 
   before(async function() {
     //Load users from wallet jsons
@@ -28,50 +28,40 @@ describe('Miscellaneous functions', function () {
     //Deploy token contract
     let balances = {};
     balances[user1] = 1000;
-    token = new ContractWrapper("./contracts/src/Tribunal.js", {
+    token = new ContractWrapper("./contracts/src/Token.js", {
       "ticker": "LIME-TST",
       "balances": balances
     });
-
-    //Deploy tribunal contract
-    tribunal = new ContractWrapper("./contracts/src/Tribunal.js", {
-      BASE_QUORUM: 10,
-      MIN_STAKE: 10,
-      STAKING_TOKEN: token.contractId,
-    });
-
   });
 
-  //TODO: Testing nested contracts
-  // it('should read balances', async function () {
-  //   let balances = await token.execute({function: "getBalances"}, user1);
-  //   console.log(balances);
-  // });
 
-  it('should have no disputes at the beginning', async function () {
-    let disputes = await tribunal.state.disputes;
-    expect(disputes).to.be.undefined;
+  it('should stake on yes from user1', async function () {
+    await token.execute({function: "stake", contract: "CONTRACT_HASH", topic: "DISPUTE_ID", key:"yes", value: 11}, user1);
+
+    let staked = await token.state.stakes["CONTRACT_HASH"]["DISPUTE_ID"]["yes"];
+    expect(staked.total).to.be.equal(11);
+    expect(staked[user1]).to.be.equal(11);
   });
 
-  it('should reject with no min stake', async function () {
-    await expect(tribunal.execute({function: "openDispute", title: "Dispute 1", stake: 5}, user1))
-      .to.be.rejectedWith("You need to deposit a least a minimum stake: 10");
-  })
-
-
-  it('should open dispute', async function () {
-    await tribunal.execute({function: "openDispute", title: "Dispute 1", stake: 11}, user1);
+  it('should stake on yes from user2', async function () {
+    await token.execute({function: "stake", contract: "CONTRACT_HASH", topic: "DISPUTE_ID", key:"yes", value: 12}, user2);
 
     //There should be one new dispute
-    let disputes = await tribunal.state.disputes;
-    expect(disputes.length).to.be.equal(1);
+    let staked = await token.state.stakes["CONTRACT_HASH"]["DISPUTE_ID"]["yes"];
+    expect(staked.total).to.be.equal(23);
+    expect(staked[user1]).to.be.equal(11);
+    expect(staked[user2]).to.be.equal(12);
+  });
 
-    //Dispute should have correct parameters
-    let dispute = disputes[0];
-    expect(dispute.creator).to.be.equal(user1);
-    expect(dispute.title).to.be.equal("Dispute 1");
-    expect(dispute.quorum).to.be.equal(10);
-  })
+
+  it('should stake on no dispute from user2', async function () {
+    await token.execute({function: "stake", contract: "CONTRACT_HASH", topic: "DISPUTE_ID", key:"no", value: 7}, user1);
+
+    //There should be one new dispute
+    let staked = await token.state.stakes["CONTRACT_HASH"]["DISPUTE_ID"]["no"];
+    expect(staked.total).to.be.equal(7);
+    expect(staked[user1]).to.be.equal(7);
+  });
 
 
 

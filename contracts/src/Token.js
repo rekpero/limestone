@@ -43,38 +43,65 @@ export function handle(state, action) {
 
   if (input.function == 'stake') {
 
-    let target = input.target;
-    let subject = input.subject;
-    let qty = input.qty;
+    let contract = input.contract;
+    let topic = input.topic;
+    let key = input.key;
+    let value = input.value;
+    let caller = action.caller;
 
-
-    if (!Number.isInteger(qty)) {
-      throw new ContractError(`Invalid value for "qty". Must be an integer`);
+    if (!contract) {
+      throw new ContractError(`No contract specified`);
     }
 
-    if (!target) {
-      throw new ContractError(`No target specified`);
+    if (!Number.isInteger(value)) {
+      throw new ContractError(`Invalid value for "value". Must be an integer`);
     }
 
-    if (qty <= 0 || caller == target) {
-      throw new ContractError('Invalid token transfer');
+    if (value <= 0) {
+      throw new ContractError('Stake value must be > 0');
     }
 
-    if (balances[caller] < qty) {
-      throw new ContractError(`Caller balance not high enough to send ${qty} token(s)!`);
+    if (balances[caller] < value) {
+      throw new ContractError(`Caller balance not high enough to stake ${value} token(s)!`);
     }
 
-    // Lower the token balance of the caller
-    balances[caller] -= qty;
-    if (target in balances) {
-      // Wallet already exists in state, add new tokens
-      balances[target] += qty;
+    if (!stakes) {
+      state.stakes = {};
+      stakes = state.stakes;
+    }
+
+    if (!stakes[contract]) {
+      stakes[contract] = {};
+    }
+
+    if (!stakes[contract][topic]) {
+      stakes[contract][topic] = {};
+    }
+
+    if (!stakes[contract][topic][key]) {
+      stakes[contract][topic][key] = {
+        total: value
+      };
     } else {
-      // Wallet is new, set starting balance
-      balances[target] = qty;
+      stakes[contract][topic][key].total += value;
     }
+
+    if (!stakes[contract][topic][key][caller]) {
+      stakes[contract][topic][key][caller] = value;
+    } else {
+      stakes[contract][topic][key][caller] += value;
+    }
+    balances[caller] -= value;
 
     return { state };
+  }
+
+  if (input.function == 'getStake') {
+    let contract = input.contract;
+    let topic = input.topic;
+    let key = input.key;
+
+    return stakes[contract][topic][key];
   }
 
   if (input.function == 'balance') {

@@ -66,7 +66,7 @@ async function checkAndUpdate(config) {
     let interval = now - lastTx.time;
 
     console.log("Interval since last upload: " + interval);
-    if (interval > MINING_INTERVAL * 1000) {
+    if (!interval || interval > MINING_INTERVAL * 1000) {
       await uploadData(config);
     }
   }

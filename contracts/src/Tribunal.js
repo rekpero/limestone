@@ -12,6 +12,8 @@ export async function handle(state, action) {
   let Token = state.token;
   let Disputes = state.disputes;
 
+  let BASE_QUORUM = state.BASE_QUORUM;
+
 
   if (action.input.function == 'openDispute') {
 
@@ -49,7 +51,7 @@ export async function handle(state, action) {
       creator: action.caller,
       title: title,
       description: description,
-      quorum: state.BASE_QUORUM,
+      quorum: BASE_QUORUM,
       deposit: deposit,
       status: status.VOTING,
       round: 0,
@@ -63,11 +65,20 @@ export async function handle(state, action) {
     //Input parameters
     let id = action.input.disputeId;
 
-    return { state };
-  }
+    //Check if tx hasn't been disputed before
+    Disputes.forEach(dispute => {
+      if (dispute.id === id) {
+        //Connect to token
+        dispute.status = status.APPROVED;
+        return;
+      }
+    });
 
-  function getVotes() {
-    return {yes: 0, no: 10};
+    throw new ContractError(`No dispute with the given id: ${id}`);
+
+
+
+    return { state };
   }
 
   throw new ContractError(`No function supplied or function not recognised: "${input.function}"`);

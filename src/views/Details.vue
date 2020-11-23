@@ -48,7 +48,9 @@
                                         <td>{{row.time.toLocaleDateString()}} {{row.time.toLocaleTimeString()}}</td>
                                         <td>{{row.tx | tx}}</td>
                                         <td>
-                                            <base-button type="info" size="sm" class="mr-4">Raise Dispute</base-button>
+                                            <a @click="$router.push('/open-dispute/' + row.tx + '/' + row.value)">
+                                                <base-button type="info" size="sm" class="mr-4">Raise Dispute</base-button>
+                                            </a>
                                         </td>
                                     </template>
 
@@ -61,6 +63,7 @@
                 </card>
             </div>
         </section>
+
     </div>
 </template>
 <script>

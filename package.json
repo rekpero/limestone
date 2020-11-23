@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@grapecity/wijmo.vue2.all": "^5.20203.748",
     "@limestonefi/api": "0.1.0",
     "@saeris/vue-spinners": "^1.0.8",
     "arql-ops": "https://kybjhezuyftg.arweave.net/ITTPLYoxidZzAJP50FQ03QJUSkkh9iKHcmMcLZOvqtQ",

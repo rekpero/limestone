@@ -5,8 +5,8 @@ import AppFooter from "./layout/AppFooter";
 import Components from "./views/Components.vue";
 import Home from "./views/Home.vue";
 import BrowseData from "./views/BrowseData.vue";
-import Login from "./views/Login.vue";
-import Register from "./views/Register.vue";
+import OpenDispute from "./views/OpenDispute.vue";
+import Dispute from "./views/Dispute.vue";
 import Dataset from "./views/Dataset.vue";
 import BalancerRewards from "./views/BalancerRewards.vue";
 import Details from "./views/Details.vue";
@@ -62,6 +62,22 @@ export default new Router({
       components: {
         header: AppHeader,
         default: BalancerRewards
+      }
+    },
+    {
+      path: "/open-dispute/:tx/:value",
+      name: "OpenDispute",
+      components: {
+        header: AppHeader,
+        default: OpenDispute
+      }
+    },
+    {
+      path: "/dispute/:id",
+      name: "dispute",
+      components: {
+        header: AppHeader,
+        default: Dispute
       }
     }
   ],
