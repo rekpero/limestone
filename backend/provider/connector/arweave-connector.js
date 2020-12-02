@@ -8,6 +8,17 @@ const LIME_TOKEN = 'q2v4Msum6oeNRkSGfaM3E3RU6RCJ17T7Vm9ltMDEv4M';
 //Value to be updated after calculations
 const FEE = 1000000;
 
+var recentHeight;
+
+async function getCurrentHeight() {
+  if (!recentHeight) {
+    let info = await arweave.network.getInfo();
+    recentHeight = parseInt(info.height);
+  }
+  console.log("Recent height: " + recentHeight);
+  return recentHeight;
+}
+
 const arweave = Arweave.init({
   host: 'arweave.net',// Hostname or IP address for a Arweave host
   port: 443,          // Port
@@ -65,6 +76,8 @@ async function find(parameters) {
 }
 
 async function findLastTx(parameters) {
+  let startBlock = (await getCurrentHeight()) - 100;
+
   let query = `{ transactions(
   first: 1,
   tags: [
@@ -72,7 +85,7 @@ async function findLastTx(parameters) {
       { name: "version", values: ["${parameters.version}"] },
       { name: "id", values: ["${parameters.id}"] }
     ],
-    block: {min: 564000},
+    block: {min: ${startBlock}},
     sort: HEIGHT_DESC
     ) {
       edges {
@@ -103,6 +116,7 @@ async function findLastTx(parameters) {
   });
 
   let res = await response.json();
+  console.log(res);
   if (res.data) {
     let tags = res.data.transactions.edges[0].node.tags;
     let result = {};
