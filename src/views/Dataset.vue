@@ -139,7 +139,7 @@ const Limestone = require('@limestone/api');
         this.dataset.avg = sum / count;
         console.log(this.dataset.chartData);
 
-        this.currentPrice = await getPrice("AR");
+        this.currentPrice = await getPrice(this.$route.params.token);
     }
   };
 </script>
