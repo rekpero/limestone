@@ -30,14 +30,14 @@
 
 
 
-                            <base-button tag="a"
-                                         href="/#/balancer-rewards"
-                                         class="mb-3 mb-sm-0"
-                                         type="warning">
+                            <!--<base-button tag="a"-->
+                                         <!--href="/#/balancer-rewards"-->
+                                         <!--class="mb-3 mb-sm-0"-->
+                                         <!--type="warning">-->
 
-                                <img src="/img/bal-logo.png" style="height:24px; margin-right:10px;"/>
-                                Balancer rewards
-                            </base-button>
+                                <!--<img src="/img/bal-logo.png" style="height:24px; margin-right:10px;"/>-->
+                                <!--Balancer rewards-->
+                            <!--</base-button>-->
 
                         </div>
 

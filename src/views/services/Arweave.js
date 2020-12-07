@@ -1,6 +1,7 @@
 const Arweave = require('arweave/node');
 const ARQL =  require('arql-ops');
 const fetch = require('isomorphic-fetch');
+const ArQgl = require("ar-gql");
 
 const arweave = Arweave.init({
   host: 'arweave.net',// Hostname or IP address for a Arweave host
@@ -66,14 +67,14 @@ export async function findAndDownload(parameters) {
 }
 
 export async function findLastTx(parameters) {
-  let startBlock = (await getCurrentHeight()) - 100;
+  let startBlock = (await getCurrentHeight()) - 50;
   let query = `{ transactions(
   first: 1,
   tags: [
-      { name: "app", values: ["${parameters.app}"] },
-      { name: "version", values: ["${parameters.version}"] },
-      { name: "id", values: ["${parameters.id}"] }
-      { name: "type", values: ["${parameters.type}"] }
+      { name: "app", values: "${parameters.app}" },
+      { name: "version", values: "${parameters.version}" },
+      { name: "id", values: "${parameters.id}" }
+      { name: "type", values: "${parameters.type}" }
     ],
     block: {min: ${startBlock}},
     sort: HEIGHT_DESC
@@ -88,35 +89,23 @@ export async function findLastTx(parameters) {
 `;
   console.log(query);
 
-  let response = await fetch("https://arweave.dev/graphql", {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      query,
-    }),
-  });
-
-  let res = await response.json();
-  if (res.data) {
+  let res = await ArQgl.run(query);
+  if (res.data && res.data.transactions.edges[0]) {
     return res.data.transactions.edges[0].node.id;
   } else {
-    throw Error("No data returned from Arweave Graph QL");
+    throw Error("Invalid data returned from Arweave Graph QL");
   }
-
 }
 
 export async function findAllTx(parameters, limit) {
-  let startBlock = (await getCurrentHeight()) - 500;
+  let startBlock = (await getCurrentHeight()) - 100;
   let query = `{ transactions(
   first: ${limit},
   tags: [
-      { name: "app", values: ["${parameters.app}"] },
-      { name: "version", values: ["${parameters.version}"] },
-      { name: "id", values: ["${parameters.id}"] },
-      { name: "type", values: ["${parameters.type}"] }
+      { name: "app", values: "${parameters.app}" },
+      { name: "version", values: "${parameters.version}" },
+      { name: "id", values: "${parameters.id}" },
+      { name: "type", values: "${parameters.type}" }
     ],
     block: {min: ${startBlock}},
     sort: HEIGHT_DESC
@@ -135,24 +124,12 @@ export async function findAllTx(parameters, limit) {
 `;
   console.log(query);
 
-  let response = await fetch("https://arweave.dev/graphql", {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      query,
-    }),
-  });
-
-  let res = await response.json();
-  if (res.data) {
+  let res = await ArQgl.run(query);
+  if (res.data && res.data.transactions.edges[0]) {
     return res.data.transactions.edges;
   } else {
-    throw Error("No data returned from Arweave Graph QL");
+    throw Error("Invalid data returned from Arweave Graph QL");
   }
-
 }
 
 export async function findConfigTx(parameters, limit) {
@@ -177,22 +154,11 @@ export async function findConfigTx(parameters, limit) {
   }
 `;
 
-  let response = await fetch("https://arweave.dev/graphql", {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      query,
-    }),
-  });
-
-  let res = await response.json();
-  if (res.data) {
+  let res = await ArQgl.run(query);
+  if (res.data && res.data.transactions.edges[0]) {
     return res.data.transactions.edges;
   } else {
-    throw Error("No data returned from Arweave Graph QL");
+    throw Error("Invalid data returned from Arweave Graph QL");
   }
 
 }

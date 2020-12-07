@@ -100,7 +100,7 @@ const Limestone = require('@limestone/api');
     },
     data: function() {
       return {
-        token: null,
+        token: {},
         configId: '',
         dataset: {
           min: 0,
@@ -118,7 +118,7 @@ const Limestone = require('@limestone/api');
     },
     async mounted() {
       this.configId = this.$route.params.dataset;
-      this.token = token(this.$route.params.token);
+      Object.assign(this.token, token(this.$route.params.token));
 
       await fetchDataset(this.dataset, this.configId, 0);
 
@@ -139,7 +139,8 @@ const Limestone = require('@limestone/api');
         this.dataset.avg = sum / count;
         console.log(this.dataset.chartData);
 
-        this.currentPrice = await getPrice(this.$route.params.token);
+      this.currentPrice = await getPrice(this.$route.params.token);
+      console.log("Current token price: " + this.currentPrice);
     }
   };
 </script>
