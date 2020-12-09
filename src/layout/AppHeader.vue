@@ -27,19 +27,30 @@
             </ul>
             <ul class="navbar-nav align-items-lg-right ml-lg-auto">
                 <li class="nav-item">
-                    <a class="nav-link nav-link-icon" href="https://twitter.com/limestone_defi" target="_blank" rel="noopener"
-                       data-toggle="tooltip" title="Follow us on Twitter">
+                    <a class="nav-link nav-link-icon" href="https://twitter.com/limestone_fi" target="_blank" rel="noopener"
+                       data-toggle="tooltip" title="See us on Twitter">
                         <i class="fa fa-twitter-square"></i>
                         <span class="nav-link-inner--text d-lg-none">Twitter</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link nav-link-icon" href="https://github.com/jakub-wojciechowski/limestone"
-                       target="_blank" rel="noopener" data-toggle="tooltip" title="Star us on Github">
+                       target="_blank" rel="noopener" data-toggle="tooltip" title="Check code on Github">
                         <i class="fa fa-github"></i>
                         <span class="nav-link-inner--text d-lg-none">Github</span>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon" href="https://discord.gg/fkpPzPX7"
+                       target="_blank" rel="noopener" data-toggle="tooltip" title="Chat on Discord">
+                        <i class="fa fa-discord"></i>
+                        <span class="nav-link-inner--text d-lg-none">Discord</span>
+                    </a>
+                </li>
+
+
+
 
             </ul>
         </base-nav>
