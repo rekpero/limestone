@@ -76,7 +76,7 @@ async function find(parameters) {
 }
 
 async function findLastTx(parameters) {
-  let startBlock = (await getCurrentHeight()) - 100;
+  let startBlock = (await getCurrentHeight()) - 200;
 
   let query = `{ transactions(
   first: 1,
