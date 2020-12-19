@@ -8,6 +8,8 @@ const VERSION = "0.005";
 
 const MINING_INTERVAL = 600; //In seconds
 
+var lastMinedTimes = {};
+
 async function uploadData(config) {
   let fetchingConfig = await connector.getData(config.tx);
   console.log(fetchingConfig);
@@ -55,22 +57,22 @@ async function uploadData(config) {
 async function checkAndUpdate(config) {
   console.log("Checking transactions from dataset: " + config.id);
   console.log(config);
-  let lastTx = await connector.findLastTx({app: "Limestone", version: VERSION, id: config.id});
-  if (lastTx  == null) {
+  //let lastTx = await connector.findLastTx({app: "Limestone", version: VERSION, id: config.id});
+  let lastMinedTime = lastMinedTimes[config.id];
+  let now = new Date().getTime();
+
+  if (lastMinedTime  == null) {
     console.log("No matching content for given dataset.");
     await uploadData(config);
+    lastMinedTimes[config.id] = now;
   } else {
-    console.log("Found last Tx:");
-    console.log(lastTx);
-    let now = new Date().getTime();
-    let interval = now - lastTx.time;
-
+    let interval = (now - lastMinedTime) / 1000;
     console.log("Interval since last upload: " + interval);
-    if (!interval || interval > MINING_INTERVAL * 1000) {
+    if (interval > MINING_INTERVAL) {
       await uploadData(config);
+      lastMinedTimes[config.id] = now;
     }
   }
-
 }
 
 async function updateAll() {
@@ -85,7 +87,7 @@ async function updateAll() {
       console.log(err);
     }
   });
-  setTimeout(updateAll, 600000);
+  setTimeout(updateAll, 10000);
 }
 
 updateAll();
