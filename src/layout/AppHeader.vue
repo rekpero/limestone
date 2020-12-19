@@ -42,7 +42,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link nav-link-icon" href="https://discord.gg/fkpPzPX7"
+                    <a class="nav-link nav-link-icon" href="https://discord.gg/PVxBZKFr46"
                        target="_blank" rel="noopener" data-toggle="tooltip" title="Chat on Discord">
                         <i class="fa fa-discord"></i>
                         <span class="nav-link-inner--text d-lg-none">Discord</span>
