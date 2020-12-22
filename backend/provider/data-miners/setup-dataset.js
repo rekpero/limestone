@@ -25,4 +25,7 @@ async function setupDataset(token, source, fetching) {
 //setupDataset("COMP", "coingecko", ["compound-governance-token", 7]);
 //setupDataset("BAL", "coingecko", ["balancer", 7]);
 //setupDataset("CHI", "uniswap", ["chi", 7]);
-setupDataset("BTC", "coingecko", ["bitcoin", 7]);
+//setupDataset("BTC", "coingecko", ["bitcoin", 7]);
+//setupDataset("CHI", "uniswap", ["chi", 7]);
+//setupDataset("UNI", "uniswap", ["uni", 7]);
+setupDataset("COMP", "uniswap", ["comp", 7]);

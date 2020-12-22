@@ -37,7 +37,7 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-12">
                         <div class="row row-grid">
-                            <div v-for="dataset in datasets" class="col-lg-4">
+                            <div v-for="dataset in datasets" class="col-lg-4" style="margin-top:25px;">
                                 <data-card :dataset="dataset"></data-card>
                             </div>
                         </div>

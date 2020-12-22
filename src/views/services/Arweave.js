@@ -137,7 +137,10 @@ export async function findConfigTx(parameters, limit) {
   ids: [
     "k5lxkNBdRNxUHYteDZ2ma62ULYNo5MfvtsT4KzVMbnw",
      "EpIx1wbzpmxY4QmQrdIKoW7iwHuPqQugKMRt0vwqMvo",
-     "fjwvlK4hI0W_-I3DYSUTo1byinrL9wRqzF9nnKi3bIA"
+     "fjwvlK4hI0W_-I3DYSUTo1byinrL9wRqzF9nnKi3bIA",
+     "E__Y1p2WBLnGFxD2_9jgS-K6TkKjHOROiO8AwLOfEHg",
+     "4VRoA_sKFYWBy4wg8U01BPSBOmtjSRySSk-6yvah1N0",
+     "-rl4OrEbSUuem5B5ZCzJIl2r0zE3pGx9Z1XBwJNjZ20"
      ],
   sort: HEIGHT_ASC
     ) {
