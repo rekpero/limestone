@@ -35,9 +35,9 @@ async function upload(tags, data) {
   });
   await arweave.transactions.sign(uploadTx, PRIVATE_KEY);
   const response = await arweave.transactions.post(uploadTx);
-  console.log("Uploaded: " + uploadTx.id);
-  console.log(response.data);
-
+  if (response.data) {
+    console.log(response.data);
+  }
   //await payFee();
 
   return uploadTx;

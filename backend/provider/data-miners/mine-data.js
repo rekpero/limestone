@@ -1,3 +1,6 @@
+//Format logs
+require('console-stamp')(console, '[HH:MM:ss.l]');
+
 const connector = require("../connector/arweave-connector.js");
 const fetchers = {
   coingecko: require("../fetcher/coingecko-fetcher.js"),
@@ -35,7 +38,7 @@ async function uploadData(config) {
       source: config.source
     };
     let tx = await connector.upload(tags, dataBundle);
-    console.log(tx);
+    console.log("Data bundle tx (" + config.token + "): " + tx.id);
   }
   if (dataLatest) {
     let tags = {
@@ -49,14 +52,13 @@ async function uploadData(config) {
       value: dataLatest
     };
     let tx = await connector.upload(tags, dataLatest);
-    console.log(tx);
+    console.log("Data spot tx (" + config.token + "): " + tx.id);
   }
 }
 
 
 async function checkAndUpdate(config) {
-  console.log("Checking transactions from dataset: " + config.id);
-  console.log(config);
+  console.log("Updating (" + config.token + "): " + config.id);
   //let lastTx = await connector.findLastTx({app: "Limestone", version: VERSION, id: config.id});
   let lastMinedTime = lastMinedTimes[config.id];
   let now = new Date().getTime();
@@ -76,17 +78,25 @@ async function checkAndUpdate(config) {
 }
 
 async function updateAll() {
-  let configTxs = await connector.find({app: "Limestone", type: "dataset-config", version: VERSION});
-  configTxs.forEach(async tx => {
-    try {
-      let config = await connector.getTags(tx);
-      config.tx = tx;
-      await checkAndUpdate(config);
-    } catch (err) {
-      console.log("Cannot fetch tx, probably not mined yet: " + tx);
-      console.log(err);
-    }
-  });
+  let configTxs;
+  try {
+    configTxs = await connector.find({app: "Limestone", type: "dataset-config", version: VERSION});
+  } catch (err) {
+    console.log("Error fetching providers configs");
+    console.log(err);
+  }
+  if (configTxs) {
+    configTxs.forEach(async tx => {
+      try {
+        let config = await connector.getTags(tx);
+        config.tx = tx;
+        await checkAndUpdate(config);
+      } catch (err) {
+        console.log("Cannot fetch tx, probably not mined yet: " + tx);
+        console.log(err);
+      }
+    });
+  }
   setTimeout(updateAll, 10000);
 }
 
