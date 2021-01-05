@@ -66,11 +66,12 @@
                                         Fetch the AR token price with just one line of code using
                                         <a href="https://github.com/jakub-wojciechowski/limestone-api/tree/main">Limestone API</a>:
                                     </div>
+
                                     <pre v-highlightjs class="code-block">
                                         <code class="javascript" >
 const Limestone = require('@limestone/api');
 
-<b>let price = await Limestone.getPrice("{{token.symbol}}");</b>
+<b>let price = await Limestone.getPrice("TOKEN_SYMBOL");</b>
 
 //The price is returned in the following format:
 {
