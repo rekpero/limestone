@@ -4,7 +4,8 @@ require('console-stamp')(console, '[HH:MM:ss.l]');
 const connector = require("../connector/arweave-connector.js");
 const fetchers = {
   coingecko: require("../fetcher/coingecko-fetcher.js"),
-  uniswap: require("../fetcher/uniswap-fetcher.js")
+  uniswap: require("../fetcher/uniswap-fetcher.js"),
+  coinbase: require("../fetcher/coinbase-fetcher.js")
 }
 
 const VERSION = "0.005";

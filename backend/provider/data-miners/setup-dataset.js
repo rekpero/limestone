@@ -28,4 +28,7 @@ async function setupDataset(token, source, fetching) {
 //setupDataset("BTC", "coingecko", ["bitcoin", 7]);
 //setupDataset("CHI", "uniswap", ["chi", 7]);
 //setupDataset("UNI", "uniswap", ["uni", 7]);
-setupDataset("COMP", "uniswap", ["comp", 7]);
+//setupDataset("KNC", "coinbase", ["kyber-network", 7]);
+//setupDataset("KNC", "coinbase", ["maker", 7]);
+//setupDataset("LRC", "coinbase", ["loopring", 7]);
+//setupDataset("MKR", "coinbase", ["maker", 7]);

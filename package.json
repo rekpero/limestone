@@ -17,6 +17,7 @@
     "bootstrap-vue": "^2.0.4",
     "chart.js": "^2.9.3",
     "cli-progress": "^3.8.2",
+    "coinbase": "^2.0.8",
     "coingecko-api": "^1.0.10",
     "console-stamp": "^0.2.9",
     "crypto-js": "^4.0.0",
