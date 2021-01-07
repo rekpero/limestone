@@ -22,7 +22,7 @@
                         </p>
                         <div class="btn-wrapper">
                             <base-button tag="a"
-                                         href="/#/browse-data"
+                                         href="#/browse-data"
                                          class="mb-3 mb-sm-0"
                                          type="info" icon="fa fa-dollar">
                                 Token prices
